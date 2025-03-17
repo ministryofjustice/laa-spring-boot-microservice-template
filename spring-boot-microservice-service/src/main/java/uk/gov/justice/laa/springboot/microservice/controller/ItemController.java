@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uk.gov.justice.laa.springboot.microservice.api.ItemsApi;
 import uk.gov.justice.laa.springboot.microservice.model.Item;
+import uk.gov.justice.laa.springboot.microservice.model.ItemRequestBody;
 import uk.gov.justice.laa.springboot.microservice.service.ItemService;
 
 /**
@@ -36,20 +37,20 @@ public class ItemController implements ItemsApi {
   }
 
   @Override
-  public ResponseEntity<Void> createItem(@RequestBody Item item) {
-    log.info("Creating item {}", item);
+  public ResponseEntity<Void> createItem(@RequestBody ItemRequestBody itemRequestBody) {
+    log.info("Creating item {}", itemRequestBody);
 
-    Long id = service.createItem(item);
+    Long id = service.createItem(itemRequestBody);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(id).toUri();
     return ResponseEntity.created(uri).build();
   }
 
   @Override
-  public ResponseEntity<Void> updateItem(Long id, Item item) {
+  public ResponseEntity<Void> updateItem(Long id, ItemRequestBody itemRequestBody) {
     log.info("Updating item {}", id);
 
-    service.updateItem(id, item);
+    service.updateItem(id, itemRequestBody);
     return ResponseEntity.noContent().build();
   }
 

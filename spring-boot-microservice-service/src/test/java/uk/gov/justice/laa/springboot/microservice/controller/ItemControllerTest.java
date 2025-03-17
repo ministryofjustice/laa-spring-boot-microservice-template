@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.justice.laa.springboot.microservice.model.Item;
+import uk.gov.justice.laa.springboot.microservice.model.ItemRequestBody;
 import uk.gov.justice.laa.springboot.microservice.service.ItemService;
 
 @WebMvcTest(ItemController.class)
@@ -61,8 +62,8 @@ class ItemControllerTest {
 
   @Test
   void createItem_returnsCreatedStatusAndLocationHeader() throws Exception {
-    Item item = Item.builder().name("Item Three").description("This is an updated item three.").build();
-    when(mockItemService.createItem(item))
+    ItemRequestBody itemRequestBody = ItemRequestBody.builder().name("Item Three").description("This is an updated item three.").build();
+    when(mockItemService.createItem(itemRequestBody))
         .thenReturn(3L);
 
     mockMvc
@@ -85,7 +86,7 @@ class ItemControllerTest {
         .andExpect(content().string("{\"type\":\"about:blank\",\"title\":\"Bad Request\"," +
             "\"status\":400,\"detail\":\"Invalid request content.\",\"instance\":\"/api/v1/items\"}"));
 
-    verify(mockItemService, never()).createItem(any(Item.class));
+    verify(mockItemService, never()).createItem(any(ItemRequestBody.class));
   }
 
   @Test
@@ -97,7 +98,7 @@ class ItemControllerTest {
             .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
 
-    verify(mockItemService).updateItem(eq(2L), any(Item.class));
+    verify(mockItemService).updateItem(eq(2L), any(ItemRequestBody.class));
   }
 
   @Test
@@ -111,7 +112,7 @@ class ItemControllerTest {
         .andExpect(content().string("{\"type\":\"about:blank\",\"title\":\"Bad Request\"," +
             "\"status\":400,\"detail\":\"Invalid request content.\",\"instance\":\"/api/v1/items/2\"}"));
 
-    verify(mockItemService, never()).updateItem(eq(2L), any(Item.class));
+    verify(mockItemService, never()).updateItem(eq(2L), any(ItemRequestBody.class));
   }
 
   @Test

@@ -7,6 +7,7 @@ import uk.gov.justice.laa.springboot.microservice.entity.ItemEntity;
 import uk.gov.justice.laa.springboot.microservice.exception.ItemNotFoundException;
 import uk.gov.justice.laa.springboot.microservice.mapper.ItemMapper;
 import uk.gov.justice.laa.springboot.microservice.model.Item;
+import uk.gov.justice.laa.springboot.microservice.model.ItemRequestBody;
 import uk.gov.justice.laa.springboot.microservice.repository.ItemRepository;
 
 /**
@@ -42,13 +43,13 @@ public class ItemService {
   /**
    * Creates an item.
    *
-   * @param item the item to be created
+   * @param itemRequestBody the item to be created
    * @return the id of the created item
    */
-  public Long createItem(Item item) {
+  public Long createItem(ItemRequestBody itemRequestBody) {
     ItemEntity itemEntity = new ItemEntity();
-    itemEntity.setName(item.getName());
-    itemEntity.setDescription(item.getDescription());
+    itemEntity.setName(itemRequestBody.getName());
+    itemEntity.setDescription(itemRequestBody.getDescription());
     ItemEntity createdItemEntity = itemRepository.save(itemEntity);
     return createdItemEntity.getId();
   }
@@ -57,12 +58,12 @@ public class ItemService {
    * Updates an item.
    *
    * @param id the id of the item to be updated
-   * @param item the updated item
+   * @param itemRequestBody the updated item
    */
-  public void updateItem(Long id, Item item) {
+  public void updateItem(Long id, ItemRequestBody itemRequestBody) {
     ItemEntity itemEntity = checkIfItemExist(id);
-    itemEntity.setName(item.getName());
-    itemEntity.setDescription(item.getDescription());
+    itemEntity.setName(itemRequestBody.getName());
+    itemEntity.setDescription(itemRequestBody.getDescription());
     itemRepository.save(itemEntity);
   }
 

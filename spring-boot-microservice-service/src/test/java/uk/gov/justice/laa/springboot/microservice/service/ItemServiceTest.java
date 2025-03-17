@@ -18,6 +18,7 @@ import uk.gov.justice.laa.springboot.microservice.entity.ItemEntity;
 import uk.gov.justice.laa.springboot.microservice.exception.ItemNotFoundException;
 import uk.gov.justice.laa.springboot.microservice.mapper.ItemMapper;
 import uk.gov.justice.laa.springboot.microservice.model.Item;
+import uk.gov.justice.laa.springboot.microservice.model.ItemRequestBody;
 import uk.gov.justice.laa.springboot.microservice.repository.ItemRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,8 +37,8 @@ class ItemServiceTest {
   void shouldGetAllItems() {
     ItemEntity firstItemEntity = new ItemEntity(1L, "Item One", "This is Item One.");
     ItemEntity secondItemEntity = new ItemEntity(2L, "Item Two", "This is Item Two.");
-    Item firstItem = Item.builder().id(1L).name( "Item One").description("This is Item One.").build();
-    Item secondItem = Item.builder().id(2L).name( "Item Two").description("This is Item Two.").build();
+    Item firstItem = Item.builder().id(1L).name("Item One").description("This is Item One.").build();
+    Item secondItem = Item.builder().id(2L).name("Item Two").description("This is Item Two.").build();
     when(mockItemRepository.findAll()).thenReturn(List.of(firstItemEntity, secondItemEntity));
     when(mockItemMapper.toItem(firstItemEntity)).thenReturn(firstItem);
     when(mockItemMapper.toItem(secondItemEntity)).thenReturn(secondItem);
@@ -76,12 +77,12 @@ class ItemServiceTest {
 
   @Test
   void shouldCreateItem() {
-    Item item = Item.builder().name("Item Three").description("This is Item Three.").build();
+    ItemRequestBody itemRequestBody = ItemRequestBody.builder().name("Item Three").description("This is Item Three.").build();
     ItemEntity itemEntity = new ItemEntity(3L, "Item Three", "This is Item Three.");
     when(mockItemRepository.save(new ItemEntity(null, "Item Three", "This is Item Three.")))
         .thenReturn(itemEntity);
 
-    Long result = itemService.createItem(item);
+    Long result = itemService.createItem(itemRequestBody);
 
     assertThat(result).isNotNull().isEqualTo(3L);
   }
@@ -91,11 +92,11 @@ class ItemServiceTest {
     Long id = 1L;
     String name = "Item One";
     String description = "This is Item One.";
-    Item item = Item.builder().id(id).name(name).description(description).build();
+    ItemRequestBody itemRequestBody = ItemRequestBody.builder().name(name).description(description).build();
     ItemEntity itemEntity = new ItemEntity(id, name, description);
     when(mockItemRepository.findById(id)).thenReturn(Optional.of(itemEntity));
 
-    itemService.updateItem(id, item);
+    itemService.updateItem(id, itemRequestBody);
 
     verify(mockItemRepository).save(itemEntity);
   }
@@ -103,10 +104,10 @@ class ItemServiceTest {
   @Test
   void shouldNotUpdateItem_whenItemNotFoundThenThrowsException() {
     Long id = 5L;
-    Item item = Item.builder().id(id).name( "Item Five").description("This is Item Five.").build();
+    ItemRequestBody itemRequestBody = ItemRequestBody.builder().name("Item Five").description("This is Item Five.").build();
     when(mockItemRepository.findById(id)).thenReturn(Optional.empty());
 
-    assertThrows(ItemNotFoundException.class, () -> itemService.updateItem(id, item));
+    assertThrows(ItemNotFoundException.class, () -> itemService.updateItem(id, itemRequestBody));
 
     verify(mockItemRepository, never()).save(any(ItemEntity.class));
   }
