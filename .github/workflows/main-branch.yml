@@ -62,5 +62,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-coverage-report
-          path: assessment-service/build/reports/jacoco
+          path: spring-boot-microservice-service/build/reports/jacoco
           retention-days: 14
