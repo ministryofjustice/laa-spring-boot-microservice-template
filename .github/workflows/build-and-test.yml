@@ -27,6 +27,8 @@ jobs:
 
       - name: Build and test
         run: ./gradlew build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test coverage verification
         run: ./gradlew jacocoTestCoverageVerification
