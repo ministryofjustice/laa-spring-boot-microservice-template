@@ -3,7 +3,7 @@
 Template GitHub repository used for Spring Boot Java microservice projects.
 
 The project uses the [laa-ccms-spring-boot-common](https://github.com/ministryofjustice/laa-ccms-spring-boot-common) Gradle plugin which provides
-sensible defaults for the following plugins:-
+sensible defaults for the following plugins:
 
 - [Checkstyle](https://docs.gradle.org/current/userguide/checkstyle_plugin.html)
 - [Dependency Management](https://plugins.gradle.org/plugin/io.spring.dependency-management)
@@ -17,8 +17,8 @@ sensible defaults for the following plugins:-
 
 ### Project structure
 Includes the following subprojects:
-- ***spring-boot-microservice-api*** - provides an example OpenAPI specification used for generating API stub interfaces and documentation.
-- ***spring-boot-microservice-service*** - provides an example REST API implementation with CRUD operations interfacing a JPA repository.
+- **spring-boot-microservice-api** - provides an example OpenAPI specification used for generating API stub interfaces and documentation.
+- **spring-boot-microservice-service** - provides an example REST API implementation with CRUD operations interfacing a JPA repository.
 
 ### Build application
 `./gradlew clean build`
@@ -40,7 +40,10 @@ http://localhost:8080/v3/api-docs
 
 ### Actuator endpoints
 http://localhost:8080/actuator
+
 http://localhost:8080/actuator/health
+
 http://localhost:8080/actuator/info
+
 
 
