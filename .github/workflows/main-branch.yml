@@ -34,9 +34,6 @@ jobs:
       - name: Integration test
         run: ./gradlew integrationTest --tests '*IntegrationTest'
 
-      - name: Update version
-        run: ./gradlew release -Prelease.useAutomaticVersion=true
-
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:

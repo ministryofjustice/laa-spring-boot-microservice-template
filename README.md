@@ -7,7 +7,6 @@ sensible defaults for the following plugins:
 
 - [Checkstyle](https://docs.gradle.org/current/userguide/checkstyle_plugin.html)
 - [Dependency Management](https://plugins.gradle.org/plugin/io.spring.dependency-management)
-- [Gradle Release](https://github.com/researchgate/gradle-release)
 - [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html)
 - [Java](https://docs.gradle.org/current/userguide/java_plugin.html)
 - [Maven Publish](https://docs.gradle.org/current/userguide/publishing_maven.html)
