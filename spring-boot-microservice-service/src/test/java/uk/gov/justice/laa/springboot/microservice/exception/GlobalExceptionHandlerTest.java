@@ -3,12 +3,9 @@ package uk.gov.justice.laa.springboot.microservice.exception;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import uk.gov.justice.laa.springboot.microservice.exception.GlobalExceptionHandler;
-import uk.gov.justice.laa.springboot.microservice.exception.ItemNotFoundException;
 
 class GlobalExceptionHandlerTest {
 
