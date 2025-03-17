@@ -1,0 +1,1 @@
+# laa-spring-boot-microservice-template
