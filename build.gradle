@@ -4,7 +4,18 @@ plugins {
 }
 
 subprojects {
+    group = 'uk.gov.justice.laa'
+
     release {
         tagTemplate = '$name-$version'
     }
+}
+
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = false
 }
