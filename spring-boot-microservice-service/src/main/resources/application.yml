@@ -1,6 +1,8 @@
 spring:
   application:
     name: LAA Spring Boot Microservice
+
+  # example database
   datasource:
     url: jdbc:h2:mem:itemsDb
     driver-class-name: org.h2.Driver

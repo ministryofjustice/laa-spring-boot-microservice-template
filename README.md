@@ -2,7 +2,7 @@
 
 Template GitHub repository used for Spring Boot Java microservice projects.
 
-The project uses the [laa-ccms-spring-boot-common](https://github.com/ministryofjustice/laa-ccms-spring-boot-common) Gradle plugin which provides
+The project uses the ```laa-ccms-spring-boot-gradle-plugin``` Gradle plugin which provides
 sensible defaults for the following plugins:
 
 - [Checkstyle](https://docs.gradle.org/current/userguide/checkstyle_plugin.html)
@@ -15,10 +15,13 @@ sensible defaults for the following plugins:
 - [Test Logger](https://github.com/radarsh/gradle-test-logger-plugin)
 - [Versions](https://github.com/ben-manes/gradle-versions-plugin)
 
+The plugin is provided by -  [laa-ccms-spring-boot-common](https://github.com/ministryofjustice/laa-ccms-spring-boot-common), where you can find
+more information regarding setup and usage.
+
 ### Project structure
 Includes the following subprojects:
-- **spring-boot-microservice-api** - provides an example OpenAPI specification used for generating API stub interfaces and documentation.
-- **spring-boot-microservice-service** - provides an example REST API implementation with CRUD operations interfacing a JPA repository.
+- **spring-boot-microservice-api** - an example OpenAPI specification used for generating API stub interfaces and documentation.
+- **spring-boot-microservice-service** - an example REST API with CRUD operations interfacing a JPA repository with an in-memory database.
 
 ### Build application
 `./gradlew clean build`

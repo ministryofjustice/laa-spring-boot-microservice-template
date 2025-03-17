@@ -1,8 +1,6 @@
-name: Build and test
+name: Build and test PR branch
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
