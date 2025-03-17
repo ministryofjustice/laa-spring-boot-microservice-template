@@ -78,8 +78,8 @@ class ItemServiceTest {
   void shouldCreateItem() {
     Item item = Item.builder().name("Item Three").description("This is Item Three.").build();
     ItemEntity itemEntity = new ItemEntity(3L, "Item Three", "This is Item Three.");
-    when(mockItemMapper.toItemEntity(item)).thenReturn(itemEntity);
-    when(mockItemRepository.save(itemEntity)).thenReturn(itemEntity);
+    when(mockItemRepository.save(new ItemEntity(null, "Item Three", "This is Item Three.")))
+        .thenReturn(itemEntity);
 
     Long result = itemService.createItem(item);
 
