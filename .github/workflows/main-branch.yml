@@ -9,7 +9,7 @@ permissions:
   packages: write
 
 jobs:
-  build:
+  build-test-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -104,4 +104,4 @@ jobs:
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: snyk.sarif
+          sarif_file: snyk-report.sarif
