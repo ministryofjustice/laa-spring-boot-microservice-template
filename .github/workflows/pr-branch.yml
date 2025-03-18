@@ -33,3 +33,15 @@ jobs:
 
       - name: Integration test
         run: ./gradlew integrationTest --tests '*IntegrationTest'
+
+  vulnerability-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Snyk to check app for vulnerabilities
+        uses: snyk/actions/gradle@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --all-sub-projects --severity-threshold=high
