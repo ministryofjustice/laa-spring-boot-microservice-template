@@ -102,6 +102,6 @@ jobs:
           args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE --sarif-file-output=snyk-report.sarif
 
       - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
