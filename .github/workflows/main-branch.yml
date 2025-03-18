@@ -34,6 +34,14 @@ jobs:
       - name: Integration test
         run: ./gradlew integrationTest --tests '*IntegrationTest'
 
+      - name: Set to github user
+        run: |
+          git config --global user.email "github@justice.gov.uk"
+          git config --global user.name "GitHub Actions Bot"
+
+      - name: Update version
+        run: ./gradlew release -Prelease.useAutomaticVersion=true
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
@@ -70,10 +78,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Run Snyk to check app for vulnerabilities
         uses: snyk/actions/gradle@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: --all-sub-projects --severity-threshold=high
+          command: code test
