@@ -4,13 +4,13 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  build:
-
+  build-test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
 
@@ -33,9 +33,6 @@ jobs:
 
       - name: Integration test
         run: ./gradlew integrationTest --tests '*IntegrationTest'
-
-      - name: Update snapshot version
-        run: ./gradlew updateSnapshotVersion
 
       - name: Publish package
         run: ./gradlew publish
