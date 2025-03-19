@@ -1,4 +1,4 @@
-name: Build and test PR branch
+name: Build and test PR
 
 on:
   pull_request:
@@ -33,6 +33,38 @@ jobs:
 
       - name: Integration test
         run: ./gradlew integrationTest --tests '*IntegrationTest'
+
+      - name: Update snapshot version
+        run: ./gradlew updateSnapshotVersion
+
+      - name: Publish package
+        run: ./gradlew publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload checkstyle report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkstyle-report
+          path: assessment-service/build/reports/checkstyle
+          retention-days: 14
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: assessment-service/build/reports/tests
+          retention-days: 14
+
+      - name: Upload jacoco coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-coverage-report
+          path: assessment-service/build/reports/jacoco
+          retention-days: 14
 
   vulnerability-scan:
     runs-on: ubuntu-latest
