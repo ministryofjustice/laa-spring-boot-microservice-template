@@ -25,11 +25,11 @@ info:
     version: 1.0.0
 
 management:
-  # enable all actuator endpoints
+  # specify actuator endpoints to enable
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: 'health, info'
 
   # show detailed health status
   endpoint:
