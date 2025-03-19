@@ -4,13 +4,13 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  build:
-
+  build-test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
 
@@ -34,9 +34,6 @@ jobs:
       - name: Integration test
         run: ./gradlew integrationTest --tests '*IntegrationTest'
 
-      - name: Update snapshot version
-        run: ./gradlew updateSnapshotVersion
-
       - name: Publish package
         run: ./gradlew publish
         env:
@@ -47,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: checkstyle-report
-          path: assessment-service/build/reports/checkstyle
+          path: spring-boot-microservice-service/build/reports/checkstyle
           retention-days: 14
 
       - name: Upload test report
@@ -55,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-report
-          path: assessment-service/build/reports/tests
+          path: spring-boot-microservice-service/build/reports/tests
           retention-days: 14
 
       - name: Upload jacoco coverage report
@@ -63,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-coverage-report
-          path: assessment-service/build/reports/jacoco
+          path: spring-boot-microservice-service/build/reports/jacoco
           retention-days: 14
 
   vulnerability-scan:
