@@ -5,11 +5,11 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
-  build:
+  build-test-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -95,13 +95,20 @@ jobs:
         with:
           command: monitor
           args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE
+
       - name: Generate sarif Snyk report
         uses: snyk/actions/gradle@0.4.0
         continue-on-error: true
         with:
           args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE --sarif-file-output=snyk-report.sarif
 
+      # Fix/hack for Snyk's sarif file to avoid this error uploading to GitHub.
+      # See https://github.com/github/codeql-action/issues/2187 for more context.
+      - name: Fix undefined values
+        run: |
+          sed -i 's/"security-severity": "undefined"/"security-severity": "0"/g' snyk-report.sarif
+
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: snyk.sarif
+          sarif_file: snyk-report.sarif
