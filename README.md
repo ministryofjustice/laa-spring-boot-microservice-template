@@ -46,7 +46,7 @@ Ensure branch protection is set up on the `main` branch.
 ### Configure Dependabot
 Change all `uk.gov.laa.springboot.*` package references to `uk.gov.laa.{application-package-name}.*`.
 
-Uncomment the `spring-boot-common-github-packages` section and follow the instructions in the comments.
+Uncomment the `registries` section and follow the instructions in the comments.
 
 ### Add Repository To Snyk
 Ensure that your repository has been added to the [Legal Aid Agency Snyk](https://app.snyk.io/org/legal-aid-agency) organisation.
