@@ -44,7 +44,7 @@ Ensure branch protection is set up on the `main` branch.
 (Optional) Modify the `CODEOWNERS` file to specify the teams or users authorized to approve pull requests.
 
 ### Configure Dependabot
-Change all `uk.gov.laa.springboot.*` package references to `uk.gov.laa.{application-package-name}.*`.
+Change all `uk.gov.laa.springboot.microservice.*` package references to `uk.gov.laa.{application-package-name}.*`.
 
 Uncomment the `registries` section and follow the instructions in the comments.
 
@@ -53,7 +53,7 @@ Ensure that your repository has been added to the [Legal Aid Agency Snyk](https:
 
 Also add `SNYK_TOKEN` as a repository secret.
 
-### Update Template Project Files
+### Update Project Files
 <details>
 
 <summary>Click here for more details on which files to update.</summary>
