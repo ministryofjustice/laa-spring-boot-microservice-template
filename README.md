@@ -116,7 +116,7 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 `./gradlew integrationTest`
 
 ### Run application
-`./gradlew :spring-boot-microservice-service:bootRun`
+`./gradlew bootRun`
 
 ### Run application via Docker
 `docker compose up`
