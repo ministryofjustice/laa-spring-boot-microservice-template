@@ -92,7 +92,7 @@ jobs:
         uses: snyk/actions/gradle@0.4.0
         continue-on-error: true
         with:
-          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE --sarif-file-output=snyk-report.sarif
+          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE --sarif-file-output=snyk-app.sarif
 
       # Fix/hack for Snyk's sarif file to avoid this error uploading to GitHub.
       # See https://github.com/github/codeql-action/issues/2187 for more context.
@@ -103,4 +103,25 @@ jobs:
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: snyk-report.sarif
+          sarif_file: snyk-app.sarif
+
+      - name: Build docker image
+        run: |
+          docker build \
+            --tag spring-boot-microservice:scan scan \
+            --file Dockerfile .
+
+      - name: Monitor docker image using Snyk
+        uses: snyk/actions/docker@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
+        with:
+          command: monitor
+          image: spring-boot-microservice:scan
+          args: --file=Dockerfile --sarif-file-output=snyk-docker.sarif
+
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-docker.sarif

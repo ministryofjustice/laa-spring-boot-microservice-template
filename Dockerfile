@@ -1,5 +1,5 @@
 # Specify java runtime base image
-FROM amazoncorretto:21-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 # Set up working directory in the container
 RUN mkdir -p /opt/laa-spring-boot-microservice/
