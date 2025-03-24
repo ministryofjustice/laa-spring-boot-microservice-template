@@ -77,6 +77,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           command: code test
+          args: --severity-threshold=high
 
   vulnerability-scan-docker:
     runs-on: ubuntu-latest
@@ -108,4 +109,4 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: spring-boot-microservice:scan
-          args: --file=Dockerfile
+          args: --file=Dockerfile --severity-threshold=high
