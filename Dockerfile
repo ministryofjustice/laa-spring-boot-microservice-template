@@ -1,8 +1,6 @@
 # Specify java runtime base image
 FROM amazoncorretto:21-alpine
 
-
-
 # Set up working directory in the container
 RUN mkdir -p /opt/laa-spring-boot-microservice/
 WORKDIR /opt/laa-spring-boot-microservice/
