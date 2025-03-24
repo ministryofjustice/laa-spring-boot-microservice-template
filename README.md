@@ -29,7 +29,7 @@ Includes the following subprojects:
 `./gradlew integrationTest`
 
 ### Run application
-`./gradlew :spring-boot-microservice-service:bootRun`
+`./gradlew bootRun`
 
 ### Run application via Docker
 `docker compose up`
