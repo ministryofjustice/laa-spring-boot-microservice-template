@@ -106,7 +106,7 @@ jobs:
           sarif_file: snyk-app.sarif
 
       - name: Build a Docker image
-        run: docker build --nocache -t spring-boot-microservice:scan .
+        run: docker build --no-cache -t spring-boot-microservice:scan .
 
       - name: Monitor docker image using Snyk
         uses: snyk/actions/docker@master
