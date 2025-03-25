@@ -67,7 +67,8 @@ jobs:
 
   vulnerability-report:
     runs-on: ubuntu-latest
-
+    needs:
+      - build-test
     permissions:
       security-events: write
 
