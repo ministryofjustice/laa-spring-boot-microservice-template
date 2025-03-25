@@ -106,13 +106,11 @@ jobs:
           sarif_file: snyk-app.sarif
 
       - name: Build a Docker image
-        run: docker build -t spring-boot-microservice:scan .
+        run: docker build --nocache -t spring-boot-microservice:scan .
 
       - name: Monitor docker image using Snyk
         uses: snyk/actions/docker@master
         continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.snyk_token }}
         with:
           command: monitor
           image: spring-boot-microservice:scan
