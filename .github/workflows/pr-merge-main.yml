@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: 'temurin'
+          distribution: 'corretto'
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -105,11 +105,8 @@ jobs:
         with:
           sarif_file: snyk-app.sarif
 
-      - name: Build docker image
-        run: |
-          docker build \
-            --tag spring-boot-microservice:scan scan \
-            --file Dockerfile .
+      - name: Build a Docker image
+        run: docker build -t spring-boot-microservice:scan .
 
       - name: Monitor docker image using Snyk
         uses: snyk/actions/docker@master
