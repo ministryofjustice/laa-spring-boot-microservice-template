@@ -11,12 +11,6 @@ permissions:
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    env:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      SNYK_ORG: legal-aid-agency
-      SNYK_TEST_EXCLUDE: build,generated
-      SNYK_TARGET_REFERENCE: main
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,16 +22,6 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}- 
 
       - name: Build and test
         run: ./gradlew build
@@ -81,6 +65,22 @@ jobs:
           path: spring-boot-microservice-service/build/reports/jacoco
           retention-days: 14
 
+  vulnerability-report:
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      SNYK_ORG: legal-aid-agency
+      SNYK_TEST_EXCLUDE: build,generated
+      SNYK_TARGET_REFERENCE: main
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Run Snyk to check app for vulnerabilities
         uses: snyk/actions/gradle@master
         continue-on-error: true # To make sure that SARIF upload gets called
@@ -89,7 +89,7 @@ jobs:
           args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE
 
       - name: Generate sarif Snyk report
-        uses: snyk/actions/gradle@0.4.0
+        uses: snyk/actions/gradle@master
         continue-on-error: true
         with:
           args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE --sarif-file-output=snyk-app.sarif
@@ -104,19 +104,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk-app.sarif
-
-      - name: Build a Docker image
-        run: docker build -t spring-boot-microservice:scan .
-
-      - name: Monitor docker image using Snyk
-        uses: snyk/actions/docker@master
-        continue-on-error: true
-        with:
-          command: monitor
-          image: spring-boot-microservice:scan
-          args: --file=Dockerfile --sarif-file-output=snyk-docker.sarif
-
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk-docker.sarif
