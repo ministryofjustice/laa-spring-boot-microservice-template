@@ -67,14 +67,16 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-test
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      SNYK_TEST_EXCLUDE: build,generated
+      SNYK_TARGET_REFERENCE: main
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Run Snyk to check app for vulnerabilities
         uses: snyk/actions/gradle@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           command: code test
           args: --severity-threshold=high
@@ -83,6 +85,9 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-test
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -97,16 +102,12 @@ jobs:
 
       - name: Build app jar with gradle
         run: ./gradlew build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build a Docker image
         run: docker build -t spring-boot-microservice:scan .
 
       - name: Run Snyk to check Docker image for vulnerabilities
         uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: spring-boot-microservice:scan
           args: --file=Dockerfile --severity-threshold=high
