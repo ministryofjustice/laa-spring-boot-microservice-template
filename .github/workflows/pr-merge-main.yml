@@ -89,7 +89,7 @@ jobs:
           args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE
 
       - name: Generate sarif Snyk report
-        uses: snyk/actions/gradle@0.4.0
+        uses: snyk/actions/gradle@master
         continue-on-error: true
         with:
           args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE --sarif-file-output=snyk-app.sarif
@@ -104,21 +104,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk-app.sarif
-
-      - name: Build a Docker image
-        run: docker build -t spring-boot-microservice:scan .
-
-      - name: Monitor docker image using Snyk
-        uses: snyk/actions/docker@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.snyk_token }}
-        with:
-          command: monitor
-          image: spring-boot-microservice:scan
-          args: --file=Dockerfile --sarif-file-output=snyk-docker.sarif
-
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk-docker.sarif
