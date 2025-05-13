@@ -91,7 +91,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: The id of the item to updated
+          description: The id of the item to be updated
           schema:
             type: integer
             format: int64
