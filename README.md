@@ -1,4 +1,8 @@
 # laa-spring-boot-microservice-template
+[![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/laa-spring-boot-microservice-template/badge)](https://github-community.service.justice.gov.uk/repository-standards/laa-spring-boot-microservice-template)
+
+### ⚠️ WORK IN PROGRESS ⚠️
+This template is still under development and features may be added or subject to change.
 
 ## Overview
 
