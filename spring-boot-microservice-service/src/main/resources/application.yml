@@ -29,13 +29,9 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health
 
   # show detailed health status
   endpoint:
     health:
       show-details: always
-
-  info:
-    env:
-      enabled: true

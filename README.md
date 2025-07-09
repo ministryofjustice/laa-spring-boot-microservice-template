@@ -138,7 +138,6 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 The following actuator endpoints have been configured:
 - http://localhost:8080/actuator
 - http://localhost:8080/actuator/health
-- http://localhost:8080/actuator/info
 
 ## Additional Information
 
