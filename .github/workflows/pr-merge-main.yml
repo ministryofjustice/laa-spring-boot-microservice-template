@@ -73,9 +73,6 @@ jobs:
 
     env:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      SNYK_ORG: legal-aid-agency
-      SNYK_TEST_EXCLUDE: build,generated
-      SNYK_TARGET_REFERENCE: main
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
