@@ -86,13 +86,14 @@ jobs:
         continue-on-error: true # To make sure that SARIF upload gets called
         with:
           command: monitor
-          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE
+          args: --severity-threshold=high
+
 
       - name: Generate sarif Snyk report
         uses: snyk/actions/gradle@master
         continue-on-error: true
         with:
-          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE --sarif-file-output=snyk-app.sarif
+          args: --sarif-file-output=snyk-app.sarif
 
       # Fix/hack for Snyk's sarif file to avoid this error uploading to GitHub.
       # See https://github.com/github/codeql-action/issues/2187 for more context.
