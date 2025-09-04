@@ -8,7 +8,7 @@ This template is still under development and features may be added or subject to
 
 Template GitHub repository used for Spring Boot Java microservice projects.
 
-The project uses the `laa-ccms-spring-boot-gradle-plugin` Gradle plugin which provides
+The project uses the `laa-spring-boot-gradle-plugin` Gradle plugin which provides
 sensible defaults for the following plugins:
 
 - [Checkstyle](https://docs.gradle.org/current/userguide/checkstyle_plugin.html)
@@ -20,7 +20,7 @@ sensible defaults for the following plugins:
 - [Test Logger](https://github.com/radarsh/gradle-test-logger-plugin)
 - [Versions](https://github.com/ben-manes/gradle-versions-plugin)
 
-The plugin is provided by -  [laa-ccms-spring-boot-common](https://github.com/ministryofjustice/laa-ccms-spring-boot-common), where you can find
+The plugin is provided by -  [laa-spring-boot-common](https://github.com/ministryofjustice/laa-spring-boot-common), where you can find
 more information regarding setup and usage.
 
 ### Project Structure
