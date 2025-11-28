@@ -1,5 +1,5 @@
 plugins {
-    id 'org.openapi.generator' version '7.14.0'
+    id 'org.openapi.generator' version '7.17.0'
     id 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
 }
 
@@ -9,8 +9,8 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.11'
-    implementation 'org.openapitools:jackson-databind-nullable:0.2.7'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
 }
 
 sourceSets.main.java.srcDirs += ['generated/src/main/java']
