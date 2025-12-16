@@ -78,13 +78,18 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: 21
+          distribution: 'corretto'
+
       - name: Run Snyk to check app for vulnerabilities
         uses: snyk/actions/gradle@master
         continue-on-error: true # To make sure that SARIF upload gets called
         with:
           command: monitor
           args: --severity-threshold=high
-
 
       - name: Generate sarif Snyk report
         uses: snyk/actions/gradle@master
