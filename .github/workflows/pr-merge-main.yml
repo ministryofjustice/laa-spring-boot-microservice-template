@@ -35,7 +35,7 @@ jobs:
         run: ./gradlew integrationTest --tests '*IntegrationTest'
 
       - name: Upload test results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: spring-boot-microservice-service/build/test-results
@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload checkstyle report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: checkstyle-report
           path: spring-boot-microservice-service/build/reports/checkstyle
@@ -51,7 +51,7 @@ jobs:
 
       - name: Upload test report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: test-report
           path: spring-boot-microservice-service/build/reports/tests
@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload jacoco coverage report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: jacoco-coverage-report
           path: spring-boot-microservice-service/build/reports/jacoco
