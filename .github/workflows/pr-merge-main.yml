@@ -2,7 +2,7 @@ name: Build and deploy after PR merged
 
 on:
   push:
-    branches: [ "fix-vulnerability-job-v2" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
