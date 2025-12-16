@@ -30,8 +30,3 @@ management:
     web:
       exposure:
         include: health
-
-  # show detailed health status
-  endpoint:
-    health:
-      show-details: always
