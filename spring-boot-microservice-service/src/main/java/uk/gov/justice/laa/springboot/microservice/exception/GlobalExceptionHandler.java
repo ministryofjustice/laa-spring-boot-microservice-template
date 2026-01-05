@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+  private static final URI DEFAULT_PROBLEM_TYPE = URI.create("about:blank");
 
   /**
    * The handler for ItemNotFoundException.
@@ -31,8 +32,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @return the response status with error message
    */
   @ExceptionHandler(ItemNotFoundException.class)
-  public ResponseEntity<String> handleItemNotFound(ItemNotFoundException exception) {
-    return ResponseEntity.status(NOT_FOUND).body(exception.getMessage());
+  public ResponseEntity<Object> handleItemNotFound(
+      ItemNotFoundException exception, WebRequest request) {
+    ProblemDetail problemDetail = buildProblemDetail(NOT_FOUND, exception.getMessage(), request);
+    return handleExceptionInternal(exception, problemDetail, new HttpHeaders(), NOT_FOUND, request);
   }
 
   @Override
@@ -64,12 +67,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   private ResponseEntity<Object> handleInvalidRequestContent(
       Exception exception, HttpHeaders headers, WebRequest request) {
-    ProblemDetail problemDetail = ProblemDetail.forStatus(BAD_REQUEST);
-    problemDetail.setType(URI.create("about:blank"));
-    problemDetail.setDetail("Invalid request content.");
-    problemDetail.setInstance(getRequestUri(request));
-
+    ProblemDetail problemDetail =
+        buildProblemDetail(BAD_REQUEST, "Invalid request content.", request);
     return handleExceptionInternal(exception, problemDetail, headers, BAD_REQUEST, request);
+  }
+
+  private ProblemDetail buildProblemDetail(
+      HttpStatusCode status, String detail, WebRequest request) {
+    ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+    problemDetail.setType(DEFAULT_PROBLEM_TYPE);
+    problemDetail.setDetail(detail);
+    problemDetail.setInstance(getRequestUri(request));
+    return problemDetail;
   }
 
   private URI getRequestUri(WebRequest request) {
