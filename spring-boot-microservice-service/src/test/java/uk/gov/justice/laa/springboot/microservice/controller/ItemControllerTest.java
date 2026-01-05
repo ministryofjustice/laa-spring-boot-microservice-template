@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -83,7 +83,7 @@ class ItemControllerTest {
             .content("{\"name\": \"Item Three\"}")
             .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string("{\"type\":\"about:blank\",\"title\":\"Bad Request\"," +
+        .andExpect(content().json("{\"type\":\"about:blank\",\"title\":\"Bad Request\"," +
             "\"status\":400,\"detail\":\"Invalid request content.\",\"instance\":\"/api/v1/items\"}"));
 
     verify(mockItemService, never()).createItem(any(ItemRequestBody.class));
@@ -109,7 +109,7 @@ class ItemControllerTest {
             .content("{\"description\": \"This is an updated item two.\"}")
             .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string("{\"type\":\"about:blank\",\"title\":\"Bad Request\"," +
+        .andExpect(content().json("{\"type\":\"about:blank\",\"title\":\"Bad Request\"," +
             "\"status\":400,\"detail\":\"Invalid request content.\",\"instance\":\"/api/v1/items/2\"}"));
 
     verify(mockItemService, never()).updateItem(eq(2L), any(ItemRequestBody.class));

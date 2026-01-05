@@ -1,11 +1,20 @@
 package uk.gov.justice.laa.springboot.microservice.exception;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import java.net.URI;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
@@ -26,6 +35,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(NOT_FOUND).body(exception.getMessage());
   }
 
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+      HttpMessageNotReadableException exception,
+      HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    return handleInvalidRequestContent(exception, headers, request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException exception,
+      HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    return handleInvalidRequestContent(exception, headers, request);
+  }
+
   /**
    * The handler for Exception.
    *
@@ -37,5 +60,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     String logMessage = "An unexpected application error has occurred.";
     log.error(logMessage, exception);
     return ResponseEntity.internalServerError().body(logMessage);
+  }
+
+  private ResponseEntity<Object> handleInvalidRequestContent(
+      Exception exception, HttpHeaders headers, WebRequest request) {
+    ProblemDetail problemDetail = ProblemDetail.forStatus(BAD_REQUEST);
+    problemDetail.setType(URI.create("about:blank"));
+    problemDetail.setDetail("Invalid request content.");
+    problemDetail.setInstance(getRequestUri(request));
+
+    return handleExceptionInternal(exception, problemDetail, headers, BAD_REQUEST, request);
+  }
+
+  private URI getRequestUri(WebRequest request) {
+    if (request instanceof ServletWebRequest servletWebRequest) {
+      return URI.create(servletWebRequest.getRequest().getRequestURI());
+    }
+    return URI.create("");
   }
 }
