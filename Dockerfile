@@ -14,7 +14,7 @@ RUN addgroup -S appgroup && adduser -u 1001 -S appuser -G appgroup
 # Set the default user
 USER 1001
 
-# Expose the port that the application will run on
+# Expose the server.port and management.server.port for the application
 EXPOSE 8081 8181
 
 # Run the JAR file
