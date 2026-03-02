@@ -130,14 +130,14 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 ### API Documentation
 
 #### Swagger UI
-- http://localhost:8080/swagger-ui/index.html
+- http://localhost:8081/swagger-ui/index.html
 #### API docs (JSON)
-- http://localhost:8080/v3/api-docs
+- http://localhost:8081/v3/api-docs
 
 ### Actuator Endpoints
 The following actuator endpoints have been configured:
-- http://localhost:8080/actuator
-- http://localhost:8080/actuator/health
+- http://localhost:8081/actuator
+- http://localhost:8081/actuator/health
 
 ## Additional Information
 
