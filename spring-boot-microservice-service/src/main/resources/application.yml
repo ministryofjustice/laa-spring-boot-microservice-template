@@ -17,13 +17,6 @@ spring:
     hibernate:
       ddl-auto: none
 
-# used by actuator info endpoint
-info:
-  app:
-    name: LAA Spring Boot Microservice application
-    description: An example Spring Boot Microservice application that provides a REST API.
-    version: 1.0.0
-
 management:
   # specify actuator endpoints to enable
   endpoints:
