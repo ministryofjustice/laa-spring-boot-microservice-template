@@ -141,6 +141,16 @@ The following actuator endpoints have been configured:
 
 ## Additional Information
 
+### Sentry
+[Sentry for Java SDK](https://docs.sentry.io/platforms/java/)
+
+In order to integrate with Sentry, the following properties need to be configured in the `application.yml`:
+```
+sentry:
+  dsn: <configure sentry dsn url here>
+  environment: <configure environment name here>
+```
+
 ### Libraries Used
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/index.html) - used to provide various endpoints to help monitor the application, such as view application health and information.
 - [Spring Boot Web](https://docs.spring.io/spring-boot/reference/web/index.html) - used to provide features for building the REST API implementation.

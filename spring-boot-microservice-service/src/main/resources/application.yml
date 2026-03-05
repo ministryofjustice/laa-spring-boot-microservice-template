@@ -30,3 +30,7 @@ management:
     web:
       exposure:
         include: health
+
+sentry:
+  dsn: # configure dsn url here
+  environment: # configure environment name here
