@@ -125,6 +125,24 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 ### Run application via Docker
 `docker compose up`
 
+### Debug application running via Docker
+
+#### Configuration
+
+* Go to Run > Edit Configurations
+* Click + (Add New Configuration)
+* Select Remote JVM Debug
+* Configure:
+* Name: Docker Debug
+* Debugger mode: Attach to remote JVM
+* Host: localhost
+* Port: 5005
+* Use module classpath: Select (laa-spring-boot-microservice-template)
+
+#### Debugging
+* run `docker compose up`
+* run > Debug 'Docker Debug'
+
 ## Application Endpoints
 
 ### API Documentation
