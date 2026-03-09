@@ -140,18 +140,40 @@ The following actuator endpoints have been configured:
 - http://localhost:8081/actuator
 - http://localhost:8081/actuator/health
 
-## Additional Information
+## Application Configuration
 
-### Libraries Used
+### Sentry
+In order to integrate with Sentry, the following properties need to be configured in the `application.yml`:
+
+```
+sentry:
+  dsn: <configure sentry dsn url here>
+  environment: <configure environment name here>
+```
+
+## Libraries Used
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/index.html) - used to provide various endpoints to help monitor the application, such as view application health and information.
 - [Spring Boot Web](https://docs.spring.io/spring-boot/reference/web/index.html) - used to provide features for building the REST API implementation.
 - [Spring Data JPA](https://docs.spring.io/spring-data/jpa/reference/jpa.html) - used to simplify database access and interaction, by providing an abstraction over persistence technologies, to help reduce boilerplate code.
 - [Springdoc OpenAPI](https://springdoc.org/) - used to generate OpenAPI documentation. It automatically generates Swagger UI, JSON documentation based on your Spring REST APIs.
+- used to capture application exception events at runtime, which can be monitored via the Sentry UI.
 - [Lombok](https://projectlombok.org/) - used to help to reduce boilerplate Java code by automatically generating common
   methods like getters, setters, constructors etc. at compile-time using annotations.
 - [MapStruct](https://mapstruct.org/) - used for object mapping, specifically for converting between different Java object types, such as Data Transfer Objects (DTOs)
   and Entity objects. It generates mapping code at compile code.
 - [H2](https://www.h2database.com/html/main.html) - used to provide an example database and should not be used in production.
+- [Sentry for Java SDK](https://docs.sentry.io/platforms/java/) - used to capture application exception events at runtime, which can be monitored via the Sentry UI.
+
+## ⚠️ Temporary Dependency Overrides
+
+The following Gradle dependency overrides are **temporary** and should be removed once the dependency versions are
+available in a future `laa-spring-boot-common` release.
+
+| Dependency                                  | Overridden Version | Reason                                                                                                                                    | Date Added |
+|---------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| `com.fasterxml.jackson.core:jackson-core`   | `2.21.1`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924) | 2026-03-04 |
+| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.18`          | Fixes Snyk issue - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822)       | 2026-03-04 |
+| `tools.jackson.core:jackson-core`           | `3.1.0`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15365915](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15365915)               | 2026-03-04 |
 
 ## ⚠️ Temporary Dependency Overrides
 

@@ -17,13 +17,6 @@ spring:
     hibernate:
       ddl-auto: none
 
-# used by actuator info endpoint
-info:
-  app:
-    name: LAA Spring Boot Microservice application
-    description: An example Spring Boot Microservice application that provides a REST API.
-    version: 1.0.0
-
 management:
   server:
     port: 8181 # change to desired port number
@@ -32,3 +25,7 @@ management:
     web:
       exposure:
         include: health
+
+sentry:
+  dsn: # configure dsn url here
+  environment: # configure environment name here

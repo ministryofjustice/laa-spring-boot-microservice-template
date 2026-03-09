@@ -1,6 +1,7 @@
 plugins {
     id 'io.freefair.lombok' version '9.1.0'
     id 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
+    id 'io.sentry.jvm.gradle' version '6.1.0'
 }
 
 test {
