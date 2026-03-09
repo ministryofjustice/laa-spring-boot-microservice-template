@@ -15,7 +15,7 @@ class GlobalExceptionHandlerTest {
   GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
 
   @Test
-  void handleItemNotFound_returnsNotFoundStatusAndErrorMessage() throws Exception {
+  void handleItemNotFound_returnsNotFoundStatusAndErrorMessage() {
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/v1/items/99");
     ResponseEntity<Object> result =
         globalExceptionHandler.handleItemNotFound(
@@ -32,7 +32,7 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  void handleGenericException_returnsInternalServerErrorStatusAndErrorMessage() throws Exception {
+  void handleGenericException_returnsInternalServerErrorStatusAndErrorMessage() {
     ResponseEntity<String> result = globalExceptionHandler.handleGenericException(new RuntimeException("Something went wrong"));
 
     assertThat(result).isNotNull();

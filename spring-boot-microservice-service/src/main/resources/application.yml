@@ -1,3 +1,6 @@
+server:
+  port: 8081 # change to desired port number
+
 spring:
   application:
     name: laa-spring-boot-microservice
@@ -9,28 +12,24 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: password
-  h2:
-    console:
-      enabled: true
 
   #do not auto create db schema, use .sql scripts
   jpa:
     hibernate:
       ddl-auto: none
 
-# used by actuator info endpoint
-info:
-  app:
-    name: LAA Spring Boot Microservice application
-    description: An example Spring Boot Microservice application that provides a REST API.
-    version: 1.0.0
-
 management:
+  server:
+    port: 8181 # change to desired port number
   # specify actuator endpoints to enable
   endpoints:
     web:
       exposure:
         include: health
+
+sentry:
+  dsn: # configure dsn url here
+  environment: # configure environment name here
 
 # ECS structured logging
 logging:
