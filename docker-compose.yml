@@ -7,4 +7,6 @@ services:
       - "8181:8181"
       - "5005:5005"
     environment:
+      - SERVER_PORT=8081
+      - SPRING_PROFILES_ACTIVE=local
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
