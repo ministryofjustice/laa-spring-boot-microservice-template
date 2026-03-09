@@ -175,16 +175,5 @@ available in a future `laa-spring-boot-common` release.
 | `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.18`          | Fixes Snyk issue - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822)       | 2026-03-04 |
 | `tools.jackson.core:jackson-core`           | `3.1.0`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15365915](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15365915)               | 2026-03-04 |
 
-## ⚠️ Temporary Dependency Overrides
-
-The following Gradle dependency overrides are **temporary** and should be removed once the dependency versions are
-available in a future `laa-spring-boot-common` release.
-
-| Dependency                                  | Overridden Version | Reason                                                                                                                                    | Date Added |
-|---------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| `com.fasterxml.jackson.core:jackson-core`   | `2.21.1`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924) | 2026-03-04 |
-| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.18`          | Fixes Snyk issue - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822)       | 2026-03-04 |
-| `tools.jackson.core:jackson-core`           | `3.1.0`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15365915](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15365915)               | 2026-03-04 |
-
 
 
