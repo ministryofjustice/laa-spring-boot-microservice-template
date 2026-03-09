@@ -21,7 +21,7 @@ import uk.gov.justice.laa.springboot.microservice.SpringBootMicroserviceApplicat
 @SpringBootTest(classes = SpringBootMicroserviceApplication.class)
 @AutoConfigureMockMvc
 @Transactional
-public class ItemControllerIntegrationTest {
+class ItemControllerIntegrationTest {
 
   @Autowired
   private MockMvc mockMvc;

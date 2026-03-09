@@ -102,7 +102,7 @@ Rename the `laa-spring-boot-microservice` directory and jar file name to  `laa-{
 The following workflows have been provided:
 
 * Build and test PR - `build-test-pr.yml`
-* Build and deploy after PR merged - `pr-merge-main.yml` 
+* Build and deploy after PR merged - `pr-merge-main.yml`
 
 In the above workflow files, change all occurrences of the `spring-boot-microservice-service/build/` build path to `{application-name}-service/build/`.
 
@@ -130,14 +130,15 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 ### API Documentation
 
 #### Swagger UI
-- http://localhost:8080/swagger-ui/index.html
+- http://localhost:8081/swagger-ui/index.html
+
 #### API docs (JSON)
-- http://localhost:8080/v3/api-docs
+- http://localhost:8081/v3/api-docs
 
 ### Actuator Endpoints
 The following actuator endpoints have been configured:
-- http://localhost:8080/actuator
-- http://localhost:8080/actuator/health
+- http://localhost:8081/actuator
+- http://localhost:8081/actuator/health
 
 ## Additional Information
 
@@ -151,5 +152,17 @@ The following actuator endpoints have been configured:
 - [MapStruct](https://mapstruct.org/) - used for object mapping, specifically for converting between different Java object types, such as Data Transfer Objects (DTOs)
   and Entity objects. It generates mapping code at compile code.
 - [H2](https://www.h2database.com/html/main.html) - used to provide an example database and should not be used in production.
+
+## ⚠️ Temporary Dependency Overrides
+
+The following Gradle dependency overrides are **temporary** and should be removed once the dependency versions are
+available in a future `laa-spring-boot-common` release.
+
+| Dependency                                  | Overridden Version | Reason                                                                                                                                    | Date Added |
+|---------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| `com.fasterxml.jackson.core:jackson-core`   | `2.21.1`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924) | 2026-03-04 |
+| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.18`          | Fixes Snyk issue - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822)       | 2026-03-04 |
+| `tools.jackson.core:jackson-core`           | `3.1.0`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15365915](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15365915)               | 2026-03-04 |
+
 
 

@@ -1,3 +1,6 @@
+server:
+  port: 8081 # change to desired port number
+
 spring:
   application:
     name: LAA Spring Boot Microservice
@@ -8,9 +11,6 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: password
-  h2:
-    console:
-      enabled: true
 
   #do not auto create db schema, use .sql scripts
   jpa:
@@ -25,6 +25,8 @@ info:
     version: 1.0.0
 
 management:
+  server:
+    port: 8181 # change to desired port number
   # specify actuator endpoints to enable
   endpoints:
     web:
