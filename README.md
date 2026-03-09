@@ -143,6 +143,13 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 * run `docker compose up`
 * run > Debug 'Docker Debug'
 
+#### Local Development Logging
+
+When running with the `local` profile, structured logging is disabled, for console output:
+```bash
+./gradlew bootRun --args='--spring.profiles.active=local'
+```
+
 ### Logging Configuration
 
 This application uses **ECS (Elastic Common Schema) structured logging** for production environments and console logging for local development.
@@ -179,14 +186,6 @@ By default, the application outputs logs in ECS JSON format with distributed tra
   "traceId": "69aaffee8d19869cfe4586c5fd5f7021"
 }
 ```
-
-#### Local Development Logging
-
-When running with the `local` profile, structured logging is disabled, for console output:
-```bash
-./gradlew bootRun --args='--spring.profiles.active=local'
-```
-
 #### logback-spring.xml Conflicts
 
 Adding `logback-spring.xml` will:
