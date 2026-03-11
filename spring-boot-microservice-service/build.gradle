@@ -4,6 +4,14 @@ plugins {
     id 'io.sentry.jvm.gradle' version '6.1.0'
 }
 
+processResources {
+    filesMatching('application.yml') {
+        filter {
+            it.replace('@version@', version)
+        }
+    }
+}
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport

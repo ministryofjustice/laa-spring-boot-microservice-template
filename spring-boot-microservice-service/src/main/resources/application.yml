@@ -4,7 +4,7 @@ server:
 spring:
   application:
     name: laa-spring-boot-microservice
-    version: 1.0.0
+    version: @version@
 
   # example database
   datasource:
