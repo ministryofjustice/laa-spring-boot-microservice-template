@@ -125,6 +125,72 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 ### Run application via Docker
 `docker compose up`
 
+### Debug application running via Docker
+
+#### Configuration
+
+* Go to Run > Edit Configurations
+* Click + (Add New Configuration)
+* Select Remote JVM Debug
+* Configure:
+* Name: Docker Debug
+* Debugger mode: Attach to remote JVM
+* Host: localhost
+* Port: 5005
+* Use module classpath: Select (laa-spring-boot-microservice-template)
+
+#### Debugging
+* run `docker compose up`
+* run > Debug 'Docker Debug'
+
+#### Local Development Logging
+
+When running with the `local` profile, structured logging is disabled, for console output:
+```bash
+./gradlew bootRun --args='--spring.profiles.active=local'
+```
+
+### Logging Configuration
+
+This application uses **ECS (Elastic Common Schema) structured logging** for production environments and console logging for local development.
+
+#### Structured Logging (Default/Production)
+
+By default, the application outputs logs in ECS JSON format with distributed tracing support:
+```json
+{
+  "@timestamp": "2026-03-06T16:25:18.992904Z",
+  "ecs": {
+    "version": "8.11"
+  },
+  "log": {
+    "level": "INFO",
+    "logger": "uk.gov.justice.laa.springboot.microservice.controller.ItemController"
+  },
+  "message": "Getting all items",
+  "process": {
+    "pid": 49402,
+    "thread": {
+      "name": "http-nio-8080-exec-2"
+    }
+  },
+  "service": {
+    "environment": "local",
+    "name": "laa-spring-boot-microservice",
+    "node": {
+      "name": "unknown"
+    },
+    "version": "1.0.0"
+  },
+  "spanId": "fe4586c5fd5f7021",
+  "traceId": "69aaffee8d19869cfe4586c5fd5f7021"
+}
+```
+#### logback-spring.xml Conflicts
+
+Adding `logback-spring.xml` will:
+- Override the profile-based logging configuration in `application.yml`
+
 ## Application Endpoints
 
 ### API Documentation
