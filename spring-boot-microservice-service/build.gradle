@@ -4,6 +4,7 @@ plugins {
     id 'io.sentry.jvm.gradle' version '6.1.0'
 }
 
+// Replaces application.yml @version@  with version from gradle.properties
 processResources {
     filesMatching('application.yml') {
         filter {
