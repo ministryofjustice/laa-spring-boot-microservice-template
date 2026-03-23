@@ -1,7 +1,7 @@
 plugins {
-    id 'io.freefair.lombok' version '9.1.0'
+    id 'io.freefair.lombok' version '9.2.0'
     id 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
-    id 'io.sentry.jvm.gradle' version '6.1.0'
+    id 'io.sentry.jvm.gradle' version '6.2.0'
 }
 
 // Replaces application.yml @version@  with version from gradle.properties
@@ -42,7 +42,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
 
     // Required for tracing information
     implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
@@ -54,8 +54,8 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     // temporary dependency overrides see README
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.1'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:11.0.18'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.2'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:11.0.20'
     implementation 'tools.jackson.core:jackson-core:3.1.0'
 
     runtimeOnly 'com.h2database:h2'
