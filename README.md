@@ -251,9 +251,9 @@ available in a future `laa-spring-boot-common` release.
 
 | Dependency                                  | Overridden Version | Reason                                                                                                                                    | Date Added |
 |---------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| `com.fasterxml.jackson.core:jackson-core`   | `2.21.1`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924) | 2026-03-04 |
-| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.18`          | Fixes Snyk issue - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822)       | 2026-03-04 |
-| `tools.jackson.core:jackson-core`           | `3.1.0`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15365915](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15365915)               | 2026-03-04 |
+| `com.fasterxml.jackson.core:jackson-core`   | `2.21.2`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551) | 2026-04-30 |
+| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.21`          | Fixes Snyk issues - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820)      | 2026-04-30 |
+| `tools.jackson.core:jackson-core`           | `3.1.1`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15907550](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15907550)               | 2026-04-30 |
 
 
 
