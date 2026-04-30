@@ -21,6 +21,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "wednesday"
+      time: "06:00"
+      timezone: "Europe/London"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "security"
     registries: "*"
     groups:
       gradle-updates:
@@ -33,6 +42,14 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "wednesday"
+      time: "06:00"
+      timezone: "Europe/London"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
     groups:
       github-actions:
         patterns:
