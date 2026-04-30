@@ -26,8 +26,7 @@ updates:
       timezone: "Europe/London"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 10
-    labels:
+`    labels:
       - "dependencies"
       - "security"
     registries: "*"
@@ -47,7 +46,6 @@ updates:
       timezone: "Europe/London"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 10
     labels:
       - "dependencies"
     groups:
