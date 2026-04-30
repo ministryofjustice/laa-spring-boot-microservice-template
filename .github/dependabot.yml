@@ -26,7 +26,7 @@ updates:
       timezone: "Europe/London"
     cooldown:
       default-days: 7
-`    labels:
+    labels:
       - "dependencies"
       - "security"
     registries: "*"
