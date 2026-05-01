@@ -20,6 +20,6 @@ repos:
         pass_filenames: false
 
   - repo: https://github.com/ministryofjustice/devsecops-hooks
-    rev: v1.3.0
+    rev: v1.6.0
     hooks:
       - id: baseline
