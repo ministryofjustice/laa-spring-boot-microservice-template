@@ -5,8 +5,9 @@ repos:
       - id: spotless
         name: Spotless Code Formatting
         description: Apply code formatting to staged Java files using Spotless
-        entry: ./gradlew spotlessApply
+        entry: ./gradlew
         language: system
+        args: ["spotlessApply"]
         types: [java]
         pass_filenames: false
         always_run: true
@@ -14,12 +15,21 @@ repos:
       - id: checkstyle
         name: Checkstyle Validation
         description: Run Checkstyle validation on staged Java files
-        entry: ./gradlew checkstyleStaged
+        entry: ./gradlew
         language: system
+        args: ["checkstyleStaged"]
         types: [java]
         pass_filenames: false
 
+      - id: github-actions-sha-pinning
+        name: GitHub Actions SHA Pinning
+        description: Require external actions to be pinned to full-length commit SHAs
+        entry: scripts/check-github-actions-sha-pinning.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+
   - repo: https://github.com/ministryofjustice/devsecops-hooks
-    rev: v1.6.0
+    rev: v1.4.0
     hooks:
       - id: baseline
