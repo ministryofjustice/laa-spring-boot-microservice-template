@@ -48,9 +48,23 @@ Ensure branch protection is set up on the `main` branch.
 (Optional) Modify the `CODEOWNERS` file to specify the teams or users authorized to approve pull requests.
 
 ### Configure Dependabot
-Change all `uk.gov.laa.springboot.microservice.*` package references to `uk.gov.laa.{application-package-name}.*`.
+The template includes `.github/dependabot.yml` with weekly updates configured for Gradle and GitHub Actions.
 
-Uncomment the `registries` section and follow the instructions in the comments.
+After creating your repository from this template:
+
+- Review the contents of `.github/dependabot.yml` and make the following changes if needed:
+  - Change `uk.gov.laa.springboot.microservice.*` package references to `uk.gov.laa.{application-package-name}.*`.
+  - Review schedule settings (`day`, `time`, `timezone`, and `cooldown`) and update if needed.
+  - Update `labels` to match your repository conventions.
+  - Uncomment the `registries` section and follow the inline instructions if you need updates from `laa-spring-boot-common`.
+- Configure `CODEOWNERS` and enable required code owner review in repository branch protection/rulesets so Dependabot PRs route to the correct team.
+- Add `REPO_TOKEN` as a repository secret if `registries` is enabled.
+- See `Required GitHub repository settings after template creation` for repository-level security toggles.
+
+### Required GitHub repository settings after template creation
+
+- Enable Dependabot security updates (`Settings` -> `Security` -> `Code security and analysis`).
+- (Optional) Enable auto-merge for low-risk dependency PRs (`Settings` -> `General` -> `Pull Requests` -> `Allow auto-merge`).
 
 ### Add Repository To Snyk
 Ensure that your repository has been added to the [Legal Aid Agency Snyk](https://app.snyk.io/org/legal-aid-agency) organisation.
@@ -125,6 +139,72 @@ The *.sql scripts in  `src/main/resources` have been included to provide an exam
 ### Run application via Docker
 `docker compose up`
 
+### Debug application running via Docker
+
+#### Configuration
+
+* Go to Run > Edit Configurations
+* Click + (Add New Configuration)
+* Select Remote JVM Debug
+* Configure:
+* Name: Docker Debug
+* Debugger mode: Attach to remote JVM
+* Host: localhost
+* Port: 5005
+* Use module classpath: Select (laa-spring-boot-microservice-template)
+
+#### Debugging
+* run `docker compose up`
+* run > Debug 'Docker Debug'
+
+#### Local Development Logging
+
+When running with the `local` profile, structured logging is disabled, for console output:
+```bash
+./gradlew bootRun --args='--spring.profiles.active=local'
+```
+
+### Logging Configuration
+
+This application uses **ECS (Elastic Common Schema) structured logging** for production environments and console logging for local development.
+
+#### Structured Logging (Default/Production)
+
+By default, the application outputs logs in ECS JSON format with distributed tracing support:
+```json
+{
+  "@timestamp": "2026-03-06T16:25:18.992904Z",
+  "ecs": {
+    "version": "8.11"
+  },
+  "log": {
+    "level": "INFO",
+    "logger": "uk.gov.justice.laa.springboot.microservice.controller.ItemController"
+  },
+  "message": "Getting all items",
+  "process": {
+    "pid": 49402,
+    "thread": {
+      "name": "http-nio-8080-exec-2"
+    }
+  },
+  "service": {
+    "environment": "local",
+    "name": "laa-spring-boot-microservice",
+    "node": {
+      "name": "unknown"
+    },
+    "version": "1.0.0"
+  },
+  "spanId": "fe4586c5fd5f7021",
+  "traceId": "69aaffee8d19869cfe4586c5fd5f7021"
+}
+```
+#### logback-spring.xml Conflicts
+
+Adding `logback-spring.xml` will:
+- Override the profile-based logging configuration in `application.yml`
+
 ## Application Endpoints
 
 ### API Documentation
@@ -171,9 +251,9 @@ available in a future `laa-spring-boot-common` release.
 
 | Dependency                                  | Overridden Version | Reason                                                                                                                                    | Date Added |
 |---------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| `com.fasterxml.jackson.core:jackson-core`   | `2.21.1`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15365924) | 2026-03-04 |
-| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.18`          | Fixes Snyk issue - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15307822)       | 2026-03-04 |
-| `tools.jackson.core:jackson-core`           | `3.1.0`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15365915](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15365915)               | 2026-03-04 |
+| `com.fasterxml.jackson.core:jackson-core`   | `2.21.2`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551) | 2026-04-30 |
+| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.21`          | Fixes Snyk issues - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820)      | 2026-04-30 |
+| `tools.jackson.core:jackson-core`           | `3.1.1`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15907550](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15907550)               | 2026-04-30 |
 
 
 

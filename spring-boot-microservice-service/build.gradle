@@ -4,6 +4,15 @@ plugins {
     id 'io.sentry.jvm.gradle' version '6.1.0'
 }
 
+// Replaces application.yml @version@  with version from gradle.properties
+processResources {
+    filesMatching('application.yml') {
+        filter {
+            it.replace('@version@', version)
+        }
+    }
+}
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
@@ -35,15 +44,19 @@ dependencies {
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1'
 
+    // Required for tracing information
+    implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+
     implementation 'org.apache.commons:commons-lang3:3.20.0'
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     // temporary dependency overrides see README
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.1'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:11.0.18'
-    implementation 'tools.jackson.core:jackson-core:3.1.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.2'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:11.0.21'
+    implementation 'tools.jackson.core:jackson-core:3.1.1'
 
     runtimeOnly 'com.h2database:h2'
 
