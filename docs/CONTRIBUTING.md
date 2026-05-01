@@ -1,120 +1,157 @@
-# Contributing to This Project
+# Contributing
 
-Thank you for your interest in contributing. This repository is a Spring Boot base template and enforces consistent code quality, formatting, and security standards across all services.
+Thank you for contributing to this repository. This document outlines the expectations and setup required to ensure contributions are consistent, secure, and easy to review.
 
 ---
 
-## Code Style Guidelines
+## Local development setup
 
-### Java Formatting
+### Prerequisites
 
-- Java code **must** be formatted using **Google Java Format**.
-- Formatting is enforced automatically using **Spotless**.
-- Developers should not manually format code using IDE-specific styles that conflict with Spotless.
+Ensure you have the following installed:
 
-To automatically format code locally:
+- A supported Java version for this project
+- Python 3
+- `pre-commit`
+- Git
 
-```shell
-./gradlew spotlessApply
-```
+Install `pre-commit` using pip:
 
-To verify formatting without modifying files:
-
-```shell
-./gradlew spotlessCheck
-```
-
-### Linting (Checkstyle)
-
-- Java code is validated using **Checkstyle**.
-- The Checkstyle configuration lives in:
-
-```text
-config/checkstyle/checkstyle.xml
-```
-
-- All Checkstyle rules must pass before code can be merged.
-- Checkstyle does **not** auto-fix issues; it fails the build if violations are found.
-
-To run Checkstyle manually:
-
-```shell
-./gradlew checkstyleMain
+```bash
+pip install pre-commit
 ```
 
 ---
 
-## Pre-commit Hook Requirements
+## Pre-commit hooks (required)
 
-This project uses **pre-commit** to enforce formatting, style, and security checks before commits are created.
+This repository uses **pre-commit** to run formatting, quality, and security checks before commits are created.
 
-### Required Setup
+### Installing hooks
 
-All contributors **must** install the pre-commit hooks locally:
+After cloning the repository, run:
 
-```shell
+```bash
 pre-commit install
 ```
 
-Once installed, the following checks run automatically on commit:
+To confirm everything is configured correctly:
 
-- Spotless code formatting (`spotlessApply`)
-- Checkstyle validation
-- Ministry of Justice DevSecOps baseline checks
-- Secret scanning (Gitleaks)
-- Merge conflict, large file, and private key detection
-
-If a commit fails, follow the guidance in the output, fix the issues, and re-commit.
-
-To run hooks manually on all files:
-
-```shell
+```bash
 pre-commit run --all-files
 ```
 
 ---
 
-## Testing and Code Coverage
+## Code formatting and validation
 
-- Unit and integration tests are executed using Gradle.
-- Code coverage is collected using **JaCoCo**.
+### Spotless (Java formatting)
 
-To run tests and generate a coverage report:
+Java code formatting is enforced using Spotless, executed via the Gradle wrapper.
 
-```shell
-./gradlew test jacocoTestReport
+- Runs automatically on every commit
+- Modifies files in-place when formatting issues are found
+
+To run manually:
+
+```bash
+./gradlew spotlessApply
 ```
 
-Coverage reports are generated in:
+---
+
+### Checkstyle
+
+Checkstyle ensures Java code adheres to the project's coding standards.
+
+To run manually:
+
+```bash
+./gradlew checkstyleStaged
+```
+
+---
+
+## GitHub Actions security requirements
+
+### SHA pinning (enforced)
+
+All GitHub Actions referenced in `.github/workflows/*.yml` files **must be pinned to full-length commit SHAs**.
+
+#### ✅ Allowed
+
+```yaml
+uses: actions/checkout@8f4b7c1e4c9fae9d7f3e45c9e4b8a9c0d1234567
+```
+
+#### ❌ Not allowed
+
+```yaml
+uses: actions/checkout@main
+uses: actions/checkout@v4
+```
+
+This rule is enforced locally using a pre-commit hook:
 
 ```text
-build/reports/jacoco/test/html/index.html
+scripts/check-github-actions-sha-pinning.sh
+```
+
+Commits that introduce unpinned actions will fail.
+
+---
+
+## Adding or updating GitHub Actions
+
+When adding or updating GitHub Actions:
+
+1. Identify the exact commit SHA to use
+2. Update the workflow to reference that SHA
+3. Run the SHA pinning hook:
+
+```bash
+pre-commit run github-actions-sha-pinning
+```
+
+4. Commit the change
+
+---
+
+## Troubleshooting
+
+### Pre-commit failures
+
+If a pre-commit hook fails:
+
+- Read the error output — most failures explain how to fix the issue
+- Formatting hooks may automatically update files; re-commit if changes occur
+- Re-run an individual hook if needed:
+
+```bash
+pre-commit run <hook-id>
+```
+
+If hooks appear misconfigured:
+
+```bash
+pre-commit clean
+pre-commit install
 ```
 
 ---
 
-## Pull Request Checklist
+## Pull request checklist
 
-Before raising a pull request, please ensure:
+Before opening a pull request, ensure:
 
-- [ ] Code builds successfully without errors
-- [ ] All tests pass locally
-- [ ] `./gradlew spotlessApply` has been run
-- [ ] `./gradlew checkstyleMain` passes with no violations
-- [ ] Pre-commit hooks pass successfully
-- [ ] No secrets, credentials, or sensitive data are committed
-- [ ] Documentation has been updated where relevant
+- `pre-commit run --all-files` passes
+- Java code is formatted (Spotless)
+- Checkstyle passes
+- All GitHub Actions are SHA-pinned
+- No placeholder values or floating references remain
 
-Pull requests that do not meet these requirements may be rejected or returned for changes.
+Pull requests that do not meet these requirements may be blocked from merging.
 
 ---
 
-## Quality Expectations
-
-This repository is intended to act as a **base template** for other services. Higher standards are therefore expected:
-
-- Keep changes minimal and well-documented
-- Avoid introducing unnecessary dependencies
-- Prefer consistency with existing patterns over personal preference
-
-Thank you for helping keep this template secure, consistent, and maintainable.
+Thank you for helping keep this project secure, readable, and maintainable.
