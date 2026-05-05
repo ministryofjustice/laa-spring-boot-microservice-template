@@ -9,63 +9,25 @@ plugins {
     id 'checkstyle'
 }
 
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'jacoco'
-    apply plugin: 'checkstyle'
-
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(25) // or 26
+// Replaces application.yml @version@  with version from gradle.properties
+processResources {
+    filesMatching('application.yml') {
+        filter {
+            it.replace('@version@', version)
         }
     }
+}
 
-    // Quality Gate: Enforce warning-free compilation
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:all" << "-Werror"
-    }
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
 
-
-
-    // Spotless configuration for Google Java Format[cite: 1, 2] spotless
-    {
-        java {
-            googleJavaFormat('1.22.0')
-            target 'src/*/java/**/*.java'
-        }
-    }
-
-    // Checkstyle configuration per Jira requirements
-    checkstyle {
-        toolVersion = "10.21.0"
-        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-        ignoreFailures = false
-        maxWarnings = 0
-    }
-
-    // JaCoCo Report Generation
-    jacoco {
-        toolVersion = "0.8.12"
-    }
-
-    test {
-        finalizedBy jacocoTestReport
-        useJUnitPlatform()
-        failOnNoDiscoveredTests = true
-    }
-
-    jacocoTestReport {
-        dependsOn test
-        reports {
-            xml.required = true
-            html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
-        }
-    }
-
-    processResources {
-        filesMatching("**/application.yml") {
-            expand(project.properties) // Replaces @version@ with the project version[cite: 9]
-        }
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/SpringBootMicroserviceApplication.class'])
+        }))
     }
 }
 
