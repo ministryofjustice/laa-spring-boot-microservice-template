@@ -1,35 +1,30 @@
-# Contributing
+## Contributing
 
 Thank you for contributing to this repository. This document outlines the expectations and setup required to ensure contributions are consistent, secure, and easy to review.
 
----
+### Local development setup
 
-## Local development setup
-
-### Prerequisites
+#### Prerequisites
 
 Ensure you have the following installed:
-
-- A supported Java version for this project
+- **Java 25 or 26** (supported versions for this project)
 - Python 3
-- `pre-commit`
 - Git
+- pre-commit
 
-Install `pre-commit` using pip:
+Install pre-commit using pip:
 
 ```bash
-pip install pre-commit
+pip install pre-commit - or (brew install pre-commit)
 ```
 
----
-
-## Pre-commit hooks (required)
+### Pre-commit hooks (required)
 
 This repository uses **pre-commit** to run formatting, quality, and security checks before commits are created.
 
-### Installing hooks
+#### Installing hooks
 
-After cloning the repository, run:
+After cloning the repository, you **must** run the install command:
 
 ```bash
 pre-commit install
@@ -41,11 +36,9 @@ To confirm everything is configured correctly:
 pre-commit run --all-files
 ```
 
----
+### Code formatting and validation
 
-## Code formatting and validation
-
-### Spotless (Java formatting)
+#### Spotless (Java formatting)
 
 Java code formatting is enforced using Spotless, executed via the Gradle wrapper.
 
@@ -58,9 +51,7 @@ To run manually:
 ./gradlew spotlessApply
 ```
 
----
-
-### Checkstyle
+#### Checkstyle
 
 Checkstyle ensures Java code adheres to the project's coding standards.
 
@@ -70,13 +61,17 @@ To run manually:
 ./gradlew checkstyleStaged
 ```
 
----
+### GitHub Actions security (enforced)
 
-## GitHub Actions security requirements
+All GitHub Actions referenced in `.github/workflows/*.yml` files **must be pinned to a full 40-character commit SHA**.
 
-### SHA pinning (enforced)
+This rule is enforced locally using the script:
 
-All GitHub Actions referenced in `.github/workflows/*.yml` files **must be pinned to full-length commit SHAs**.
+```
+scripts/check-github-actions-sha-pinning.sh
+```
+
+Any commit that introduces unpinned (tagged or branch-based) GitHub Actions will be **blocked**.
 
 #### ✅ Allowed
 
@@ -91,35 +86,17 @@ uses: actions/checkout@main
 uses: actions/checkout@v4
 ```
 
-This rule is enforced locally using a pre-commit hook:
+### Quality gates (Definition of Done)
 
-```text
-scripts/check-github-actions-sha-pinning.sh
-```
+All contributions **must** meet the following quality criteria before they are considered complete:
 
-Commits that introduce unpinned actions will fail.
+- **Compilation**: The code compiles without errors and without warnings (`-Werror`).
+- **Formatting**: `spotlessCheck` passes with no violations.
+- **Coverage**: `jacocoTestReport` executes successfully.
 
----
+### Troubleshooting
 
-## Adding or updating GitHub Actions
-
-When adding or updating GitHub Actions:
-
-1. Identify the exact commit SHA to use
-2. Update the workflow to reference that SHA
-3. Run the SHA pinning hook:
-
-```bash
-pre-commit run github-actions-sha-pinning
-```
-
-4. Commit the change
-
----
-
-## Troubleshooting
-
-### Pre-commit failures
+#### Pre-commit failures
 
 If a pre-commit hook fails:
 
@@ -138,20 +115,17 @@ pre-commit clean
 pre-commit install
 ```
 
----
-
-## Pull request checklist
+### Pull request checklist
 
 Before opening a pull request, ensure:
 
-- `pre-commit run --all-files` passes
-- Java code is formatted (Spotless)
-- Checkstyle passes
-- All GitHub Actions are SHA-pinned
-- No placeholder values or floating references remain
+- [ ] `pre-commit run --all-files` passes
+- [ ] No placeholder values remain in the code
+- [ ] All Gradle tasks execute without errors
+- [ ] Java code is formatted (Spotless)
+- [ ] Checkstyle passes
+- [ ] All GitHub Actions are SHA-pinned
 
 Pull requests that do not meet these requirements may be blocked from merging.
-
----
 
 Thank you for helping keep this project secure, readable, and maintainable.

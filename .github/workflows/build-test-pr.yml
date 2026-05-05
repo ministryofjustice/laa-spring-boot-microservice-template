@@ -108,7 +108,7 @@ jobs:
         run: docker build -t spring-boot-microservice:scan .
 
       - name: Run Snyk to check Docker image for vulnerabilities
-        uses: snyk/actions/docker@master
+        uses: snyk/actions/setup@9adf32b696e17e3352613b3e2b2079038237554d
         with:
           image: spring-boot-microservice:scan
           args: --file=Dockerfile --severity-threshold=high

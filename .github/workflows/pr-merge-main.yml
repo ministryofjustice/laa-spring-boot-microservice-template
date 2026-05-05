@@ -85,7 +85,7 @@ jobs:
           distribution: 'corretto'
 
       - name: Setup Snyk
-        uses: snyk/actions/setup@master
+        uses: snyk/actions/setup@9adf32b696e17e3352613b3e2b2079038237554d
 
       - name: Run Snyk to check app for vulnerabilities
         run: snyk monitor --severity-threshold=high

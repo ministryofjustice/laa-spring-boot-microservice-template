@@ -7,8 +7,8 @@ repos:
         description: Apply code formatting to staged Java files using Spotless
         entry: ./gradlew
         language: system
-        args: ["spotlessApply"]
-        types: [java]
+        args: [ "spotlessApply", "--quiet" ]
+        types: [ java ]
         pass_filenames: false
         always_run: true
 
@@ -17,8 +17,8 @@ repos:
         description: Run Checkstyle validation on staged Java files
         entry: ./gradlew
         language: system
-        args: ["checkstyleStaged"]
-        types: [java]
+        args: [ "checkstyleMain", "--quiet" ]
+        types: [ java ]
         pass_filenames: false
 
       - id: github-actions-sha-pinning
