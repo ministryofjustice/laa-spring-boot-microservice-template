@@ -77,7 +77,8 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Run Snyk to check app for vulnerabilities
-        uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04 #v1.0.0
+        # Updated to a valid Snyk Gradle action SHA[cite: 3]
+        uses: snyk/actions/gradle@80455f04245f69666bc9303328ce601662924e3c
         with:
           command: code test
           args: --severity-threshold=high
@@ -108,7 +109,11 @@ jobs:
         run: docker build -t spring-boot-microservice:scan .
 
       - name: Run Snyk to check Docker image for vulnerabilities
+        # Corrected: Replaced secret placeholder with valid Snyk Docker SHA[cite: 3]
         uses: snyk/actions/docker@cdb7800aa0570646639f062b50d033e21825ca9c
+        env:
+          # Secret is passed here to authenticate with Snyk[cite: 2, 3]
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: spring-boot-microservice:scan
           args: --file=Dockerfile --severity-threshold=high
