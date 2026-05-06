@@ -78,7 +78,7 @@ jobs:
 
       - name: Run Snyk to check app for vulnerabilities
         # Updated to the current master SHA for the snyk/actions repo
-        uses: snyk/actions/gradle@b32e11806589c379af5673c4db9c7d26eb026e30
+        uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04
         with:
           command: code test
           args: --severity-threshold=high
@@ -110,7 +110,7 @@ jobs:
 
       - name: Run Snyk to check Docker image for vulnerabilities
         # Updated to the current master SHA for the snyk/actions repo
-        uses: snyk/actions/docker@b32e11806589c379af5673c4db9c7d26eb026e30
+        uses: snyk/actions/docker@9adf32b1121593767fc3c057af55b55db032dc04
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
