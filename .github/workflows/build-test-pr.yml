@@ -77,7 +77,8 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Run Snyk to check app for vulnerabilities
-        uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04 #v1.0.0
+        # Updated to the current master SHA for the snyk/actions repo
+        uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04  # v1.0.0
         with:
           command: code test
           args: --severity-threshold=high
@@ -108,7 +109,10 @@ jobs:
         run: docker build -t spring-boot-microservice:scan .
 
       - name: Run Snyk to check Docker image for vulnerabilities
-        uses: snyk/actions/docker@master
+        # Updated to the current master SHA for the snyk/actions repo
+        uses: snyk/actions/docker@9adf32b1121593767fc3c057af55b55db032dc04  # v1.0.0
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: spring-boot-microservice:scan
           args: --file=Dockerfile --severity-threshold=high
