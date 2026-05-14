@@ -1,3 +1,4 @@
 subprojects {
     group = 'uk.gov.justice.laa.springboot.microservice'
 }
+
