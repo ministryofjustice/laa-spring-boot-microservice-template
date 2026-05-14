@@ -9,8 +9,10 @@ plugins {
     id 'checkstyle'
 }
 
-// TODO: Remove the temporary dependency overrides once the underlying issues are resolved
-// https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-16691231
+// Overrides the Tomcat version bundled with Spring Boot to fix known CVEs:
+// SNYK-JAVA-ORGAPACHETOMCATEMBED-16691231 (Critical - Improper Authentication)
+// SNYK-JAVA-ORGAPACHETOMCATEMBED-16643259 (High - Resource Allocation without Limits)
+// Remove once the Spring Boot parent BOM ships with >= 11.0.22.
 ext['tomcat.version'] = '11.0.22'
 
 // Replaces application.yml @version@  with version from gradle.properties
@@ -64,7 +66,9 @@ dependencies {
 
     // temporary dependency overrides see README
     implementation 'com.fasterxml.jackson.core:jackson-core:2.21.2'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:11.0.21'
+    // tomcat version is controlled via ext['tomcat.version'] = '11.0.22' above - do NOT pin an explicit version here
+    // as it would override Spring Boot's dependency management and ignore the ext property
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core'
     implementation 'tools.jackson.core:jackson-core:3.1.2'
 
     runtimeOnly 'com.h2database:h2'
