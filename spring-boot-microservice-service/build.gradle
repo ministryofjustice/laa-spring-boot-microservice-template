@@ -9,6 +9,10 @@ plugins {
     id 'checkstyle'
 }
 
+// TODO: Remove the temporary dependency overrides once the underlying issues are resolved
+// https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-16691231
+ext['tomcat.version'] = '11.0.22'
+
 // Replaces application.yml @version@  with version from gradle.properties
 processResources {
     filesMatching('application.yml') {
