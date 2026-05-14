@@ -29,6 +29,108 @@ Includes the following subprojects:
 - `spring-boot-microservice-api` - example OpenAPI specification used for generating API stub interfaces and documentation.
 - `spring-boot-microservice-service` - example REST API service with CRUD operations interfacing a JPA repository with an in-memory database.
 
+## Initialising Your Service from This Template
+
+This repository ships with `initialise-service.py` — a Python 3 script that renames every
+placeholder value across all source files, renames subproject directories, restructures package
+names, and cleans up the README in one guided run.
+
+### Prerequisites
+
+- **Python 3.9 or later** (no third-party packages required — all imports are from the standard library).
+- Run the script from the **root of the repository**.
+
+### Running the Script
+
+```bash
+# Fully interactive — the script will prompt you for every value
+python3 initialise-service.py
+
+# Pass the service name up-front to skip the first prompt
+python3 initialise-service.py laa-my-new-service
+
+# Preview every change without touching any files
+python3 initialise-service.py laa-my-new-service --dry-run
+
+# Override individual values directly (skips those prompts)
+python3 initialise-service.py laa-my-new-service \
+    --package-suffix my.new.service \
+    --class-prefix MyNewService
+```
+
+### What the Script Prompts You For
+
+| # | Prompt | Behaviour | Example |
+|---|--------|-----------|---------|
+| 1 | **New service name** *(required)* | Lowercase kebab-case. Drives all other defaults. | `laa-crime-applications` |
+| 2 | **Java package suffix** | Defaults to a dot-notation form of the service name. Override if needed. | `crime.applications` |
+| 3 | **Application class prefix** | Defaults to PascalCase form of the service name. | `CrimeApplications` |
+| 4 | **Application version** | Defaults to `1.0.0` (kept as-is in `gradle.properties`). | `1.0.0` |
+| 5 | **Server port** | Defaults to `8081`. Updates `application.yml`, `Dockerfile`, `docker-compose.yml`, and README example URLs. | `8080` |
+| 6 | **Management (actuator) port** | Defaults to `8181`. | `9090` |
+| 7 | **Delete this script when done?** | Defaults to `no`. If `yes`, the script removes itself after a successful run. | `y` / `n` |
+
+Before any changes are applied, the script displays a **confirmation summary** showing every value
+it is about to use. You must explicitly confirm before it writes anything.
+
+### What Gets Changed
+
+The script performs the following operations **in order**:
+
+1. **File content replacements** — walks every non-binary, non-generated file in the repository
+   and replaces the template placeholders with your values. The replacements are applied
+   most-specific-first to avoid partial collisions:
+   - `laa-spring-boot-microservice-template` → your root project name
+   - `laa-spring-boot-microservice` → `laa-{your-service}`
+   - `spring-boot-microservice` → your service name (module paths, Gradle paths)
+   - `uk.gov.justice.laa.springboot.microservice` → your Java package
+   - `uk.gov.laa.springboot.microservice` → your Gradle/Dependabot package group
+   - `SpringBootMicroservice` → your class prefix (class names, Jacoco exclusions)
+   - `LAA Spring Boot Microservice` → your display name (`application.yml`, `info.app.*`)
+
+2. **Java source file renames** — renames `SpringBootMicroserviceApplication.java` and
+   `SpringBootMicroserviceApplicationTests.java` to match your class prefix.
+
+3. **Java package directory renames** — moves the `uk/gov/justice/laa/springboot/microservice`
+   directory tree under every `src/.../java` root to your new package path.
+
+4. **Subproject directory renames** — renames `spring-boot-microservice-api` and
+   `spring-boot-microservice-service` to `{your-service}-api` and `{your-service}-service`.
+
+5. **Port number updates** *(only if you changed the defaults)* — targeted replacements in
+   `application.yml`, `Dockerfile`, `docker-compose.yml`, and `README.md`.
+
+6. **README cleanup** — removes the ⚠️ WORK IN PROGRESS banner and replaces the
+   *Setup Instructions* section with a TODO placeholder for you to fill in.
+
+### Files and Directories That Are Never Modified
+
+The following are intentionally skipped:
+
+| Skipped | Reason |
+|---------|--------|
+| `.git/`, `.gradle/`, `build/`, `bin/`, `generated/` | Generated / VCS internals |
+| `gradlew`, `gradlew.bat`, `gradle-wrapper.jar` | Gradle wrapper — must not be altered |
+| `initialise-service.py` | The script itself |
+| `*.class`, `*.jar`, `*.exe`, binary assets | Binary files that cannot be text-replaced |
+
+Any new source files you add in the future will be processed automatically — no changes to the
+script are needed.
+
+### After Running the Script
+
+The script prints a checklist of remaining manual steps:
+
+1. `git diff` — review every change before committing.
+2. Rewrite the TODO section in `README.md` to describe your service.
+3. Replace `open-api-specification.yml` with your own API design.
+4. Set `sentry.dsn` and `sentry.environment` in `application.yml`.
+5. Uncomment and configure the `registries` section in `.github/dependabot.yml`.
+6. Set your team as code owner in `.github/CODEOWNERS`.
+7. Delete the example `Item*` classes, `schema.sql`, and `data.sql` if not needed.
+
+---
+
 ## Setup Instructions
 Once you've created your repository using this template, perform the following steps:
 
