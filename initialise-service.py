@@ -4,6 +4,7 @@ LAA Spring Boot Microservice Template — Initialisation Script
 =============================================================
 Renames all template placeholder values to your new service name across every
 source file, renames the subproject directories, and restructures the README.
+Optionally switches the database from H2 to PostgreSQL (RDS-ready).
 
 Usage
 -----
@@ -38,11 +39,16 @@ _T_VERSION        = "1.0.0"
 # MoJ compliance badge URL base
 _MOJ_BADGE_BASE = "https://github-community.service.justice.gov.uk/repository-standards"
 
+# Fragment directory — contains postgres (and future feature) sub-directories.
+# Excluded from all renaming/replacement walks.
+_FRAGMENTS_DIR = Path(__file__).parent.resolve() / ".template-fragments"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Paths / files to skip
 # ─────────────────────────────────────────────────────────────────────────────
 _SKIP_DIRS = {
     ".git", ".gradle", "build", "bin", "generated", ".idea", "__pycache__",
+    ".template-fragments",
 }
 _SKIP_FILES = {
     "gradlew", "gradlew.bat", "gradle-wrapper.jar",
@@ -400,6 +406,194 @@ def step_rename_pkg_dirs(
         print("    Nothing to rename.")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# PostgreSQL step — applies fragments from .template-fragments/postgres/
+# ─────────────────────────────────────────────────────────────────────────────
+
+def step_configure_postgres(
+    root: Path,
+    service_name: str,
+    new_java_pkg: str,
+    server_port: str,
+    mgmt_port: str,
+    dry_run: bool,
+):
+    """
+    Switches the service from H2 to PostgreSQL (RDS-ready) by:
+      1. Replacing the H2 runtimeOnly dep with postgresql + flyway in build.gradle
+      2. Adding testcontainers deps (replacing H2 in tests)
+      3. Replacing the datasource block in application.yml with env-var-driven config
+      4. Converting schema.sql / data.sql to Flyway migrations under db/migration/
+      5. Adding a postgres service to docker-compose.yml and DB env vars to the app service
+      6. Copying a TestcontainersConfig.java into the integration test source tree
+      7. Creating a .helm/ directory with Chart.yaml (depending on laa-generic-helm-chart)
+         and per-environment values files — DB env vars read from the
+         rds-postgresql-instance-output Kubernetes Secret created by Cloud Platform
+    All fragment files live in .template-fragments/postgres/ and contain %%TOKEN%%
+    placeholders that are substituted with the user's chosen values before writing.
+    """
+    _section("Step 5 / 5  —  Configuring PostgreSQL (RDS-ready)")
+
+    pg_dir = _FRAGMENTS_DIR / "postgres"
+
+    # Token substitutions applied to every fragment before it is written.
+    # %%SERVICE_KEBAB%% → service name without laa- prefix (used as DB name, container name)
+    # %%JAVA_PKG%%      → full Java package (for TestcontainersConfig)
+    # %%SERVER_PORT%%   → server port (for helm values)
+    # %%MGMT_PORT%%     → management port (for helm values)
+    core = re.sub(r"^laa-", "", service_name)
+    tokens = {
+        "%%SERVICE_KEBAB%%": core,
+        "%%JAVA_PKG%%":      new_java_pkg,
+        "%%SERVER_PORT%%":   server_port,
+        "%%MGMT_PORT%%":     mgmt_port,
+    }
+
+    def _fill(text: str) -> str:
+        for tok, val in tokens.items():
+            text = text.replace(tok, val)
+        return text
+
+    def _write(dest: Path, text: str):
+        if dry_run:
+            print(f"    Would write  : {dest.relative_to(root)}")
+        else:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(text, encoding="utf-8")
+            print(f"    Written      : {dest.relative_to(root)}")
+
+    def _fragment(name: str) -> str:
+        return _fill((pg_dir / name).read_text(encoding="utf-8"))
+
+    # ── Locate the service subproject (may already be renamed) ────────────────
+    service_dir = root / f"{service_name}-service"
+    if not service_dir.exists():
+        service_dir = root / f"{_T_KEBAB}-service"
+
+    # ── 1. build.gradle — replace H2 with postgresql + flyway ─────────────────
+    build_gradle = service_dir / "build.gradle"
+    if build_gradle.exists():
+        original = build_gradle.read_text(encoding="utf-8")
+        updated = original.replace(
+            "    runtimeOnly 'com.h2database:h2'",
+            _fragment("build-gradle-additions.txt").rstrip(),
+        )
+        # Inject testcontainers deps before the closing brace of the test block
+        updated = updated.replace(
+            "    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'",
+            _fragment("build-gradle-test-additions.txt").rstrip()
+            + "\n\n    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'",
+        )
+        if updated != original:
+            if not dry_run:
+                build_gradle.write_text(updated, encoding="utf-8")
+            print(f"    Updated      : {build_gradle.relative_to(root)}")
+        else:
+            print("    WARNING: could not patch build.gradle — check manually")
+
+    # ── 2. application.yml — replace datasource + jpa block ───────────────────
+    app_yml = service_dir / "src" / "main" / "resources" / "application.yml"
+    if app_yml.exists():
+        original = app_yml.read_text(encoding="utf-8")
+        # Replace from "  # example database" through the jpa block (end of ddl-auto line)
+        updated = re.sub(
+            r" {2}# example database\n {2}datasource:.*?ddl-auto: none",
+            _fragment("application-datasource.yml").rstrip(),
+            original,
+            flags=re.DOTALL,
+        )
+        if updated != original:
+            if not dry_run:
+                app_yml.write_text(updated, encoding="utf-8")
+            print(f"    Updated      : {app_yml.relative_to(root)}")
+        else:
+            print("    WARNING: could not patch application.yml — check manually")
+
+    # ── 3. Flyway migrations — replace schema.sql / data.sql ──────────────────
+    resources_dir = service_dir / "src" / "main" / "resources"
+    migration_dir = resources_dir / "db" / "migration"
+
+    schema_sql = resources_dir / "schema.sql"
+    data_sql   = resources_dir / "data.sql"
+
+    _write(migration_dir / "V1__create_items_table.sql", _fragment("V1__create_items_table.sql"))
+    _write(migration_dir / "V2__seed_items.sql",         _fragment("V2__seed_items.sql"))
+
+    for old_file in (schema_sql, data_sql):
+        if old_file.exists():
+            if dry_run:
+                print(f"    Would delete : {old_file.relative_to(root)}")
+            else:
+                old_file.unlink()
+                print(f"    Deleted      : {old_file.relative_to(root)}")
+
+    # ── 4. docker-compose.yml — add postgres service + DB env vars ────────────
+    compose_file = root / "docker-compose.yml"
+    if compose_file.exists():
+        original = compose_file.read_text(encoding="utf-8")
+        postgres_service = _fragment("docker-compose-postgres.yml")
+        app_env_vars     = _fragment("docker-compose-app-env.yml")
+
+        # Prepend the postgres service before the app service
+        updated = original.replace("services:\n", "services:\n" + postgres_service + "\n")
+
+        # Add depends_on + DB env vars to the app service environment block.
+        # Insert after "environment:" if it exists, otherwise append to app service.
+        updated = updated.replace(
+            "    environment:\n      - SERVER_PORT=",
+            "    depends_on:\n      postgres:\n        condition: service_healthy\n"
+            "    environment:\n" + app_env_vars
+            + "      - SERVER_PORT=",
+        )
+        if updated != original:
+            if not dry_run:
+                compose_file.write_text(updated, encoding="utf-8")
+            print(f"    Updated      : {compose_file.relative_to(root)}")
+        else:
+            print("    WARNING: could not patch docker-compose.yml — check manually")
+
+    # ── 5. TestcontainersConfig.java ───────────────────────────────────────────
+    pkg_path = new_java_pkg.replace(".", os.sep)
+    tc_dest = (
+        service_dir / "src" / "integrationTest" / "java" / pkg_path / "TestcontainersConfig.java"
+    )
+    _write(tc_dest, _fragment("TestcontainersConfig.java"))
+
+    # ── 6. Patch ItemControllerIntegrationTest to import TestcontainersConfig ──
+    it_file = (
+        service_dir / "src" / "integrationTest" / "java" / pkg_path / "controller"
+        / "ItemControllerIntegrationTest.java"
+    )
+    if it_file.exists():
+        original = it_file.read_text(encoding="utf-8")
+        import_line = f"import {new_java_pkg}.TestcontainersConfig;\n"
+        spring_import = "import org.springframework.context.annotation.Import;\n"
+        updated = original
+        if import_line not in updated:
+            updated = updated.replace(
+                "@SpringBootTest(",
+                spring_import + import_line + "\n@Import(TestcontainersConfig.class)\n@SpringBootTest(",
+            )
+        if updated != original:
+            if not dry_run:
+                it_file.write_text(updated, encoding="utf-8")
+            print(f"    Updated      : {it_file.relative_to(root)}")
+
+    # ── 7. Helm chart ──────────────────────────────────────────────────────────
+    helm_root = root / ".helm" / service_name
+    src_helm  = pg_dir / "helm"
+
+    for src_file in src_helm.rglob("*"):
+        if src_file.is_file():
+            rel      = src_file.relative_to(src_helm)
+            dest     = helm_root / rel
+            _write(dest, _fill(src_file.read_text(encoding="utf-8")))
+
+    print("\n    PostgreSQL configuration complete.")
+    print(f"    Helm chart skeleton written to .helm/{service_name}/")
+    print(f"    Run 'helm dependency update .helm/{service_name}' before deploying.")
+
+
 def step_rename_subproject_dirs(
     root: Path,
     old_kebab: str,
@@ -524,6 +718,12 @@ def main():
         default=False,
     )
 
+    # 8. Database choice
+    use_postgres = _prompt_yn(
+        "Use PostgreSQL instead of H2? (RDS-ready — adds Flyway, Testcontainers, helm chart)",
+        default=False,
+    )
+
     # ── Validate ──────────────────────────────────────────────────────────────
     errors = _validate(service_name, pkg_suffix, class_prefix)
     if not server_port.isdigit() or not (1 <= int(server_port) <= 65535):
@@ -558,6 +758,7 @@ def main():
         ("Server port",       server_port),
         ("Management port",   mgmt_port),
         ("Delete script",     "yes" if self_delete else "no"),
+        ("Database",          "PostgreSQL (RDS)" if use_postgres else "H2 (in-memory)"),
         ("Dry run",           "yes" if args.dry_run else "no"),
     ]
     for label, value in rows:
@@ -613,6 +814,14 @@ def main():
     _section("Cleaning up README")
     _cleanup_readme(root, service_name, args.dry_run)
 
+    # PostgreSQL configuration (optional)
+    if use_postgres:
+        step_configure_postgres(
+            root, service_name, new_java_pkg,
+            server_port, mgmt_port,
+            args.dry_run,
+        )
+
     # ── Done ──────────────────────────────────────────────────────────────────
     print()
     print("=" * 65)
@@ -621,7 +830,15 @@ def main():
         print("  Re-run without --dry-run to apply changes.")
     else:
         print(f"  ✓  Initialisation complete for '{service_name}'!")
-        print("""
+        pg_steps = ""
+        if use_postgres:
+            pg_steps = """
+  8.  .helm/                    Run: helm dependency update .helm/%%SERVICE_KEBAB%%
+                                Set image.registry + image.repository in each values file
+                                Cloud Platform provisions the rds-postgresql-instance-output
+                                secret automatically when the RDS module is applied
+  9.  TestcontainersConfig      Docker must be running for integration tests to pass"""
+        print(f"""
   Remaining manual steps
   ──────────────────────────────────────────────────────────
   1.  git diff                  Review every change before committing
@@ -631,7 +848,7 @@ def main():
   5.  dependabot.yml            Uncomment and configure the registries section
   6.  .github/CODEOWNERS        Set your team as code owner
   7.  Remove example domain     Delete Item* classes, schema.sql, data.sql
-                                if you don't need them
+                                if you don't need them{pg_steps}
   ──────────────────────────────────────────────────────────""")
 
     if self_delete and not args.dry_run:
