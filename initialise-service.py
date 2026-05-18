@@ -714,7 +714,7 @@ def main():
 
     # 7. Self-delete
     self_delete = _prompt_yn(
-        "Delete this initialisation script once complete?",
+        "Delete this initialisation script and associated template fragments once complete?",
         default=False,
     )
 
@@ -757,7 +757,7 @@ def main():
         ("Version",           version),
         ("Server port",       server_port),
         ("Management port",   mgmt_port),
-        ("Delete script",     "yes" if self_delete else "no"),
+        ("Delete init files", "yes" if self_delete else "no"),
         ("Database",          "PostgreSQL (RDS)" if use_postgres else "H2 (in-memory)"),
         ("Dry run",           "yes" if args.dry_run else "no"),
     ]
@@ -852,6 +852,13 @@ def main():
   ──────────────────────────────────────────────────────────""")
 
     if self_delete and not args.dry_run:
+        try:
+            if _FRAGMENTS_DIR.exists():
+                shutil.rmtree(_FRAGMENTS_DIR)
+                print("  ✓  Template fragments deleted.")
+        except OSError as exc:
+            print(f"  WARNING: Could not delete template fragments — {exc}")
+
         try:
             Path(__file__).unlink()
             print("  ✓  Script deleted.")
