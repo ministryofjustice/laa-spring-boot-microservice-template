@@ -6,10 +6,10 @@ laa-generic-app:
   environmentName: production
   replicaCount: 2
   minReplicaCount: 2
-  image:
-    registry: ""        # TODO: set ECR registry
-    repository: ""      # TODO: set ECR repository
-    tag: ""             # set by CI pipeline
+  image:                # set by CI pipeline
+    registry: ""
+    repository: ""
+    tag: ""
   service:
     port: %%SERVER_PORT%%
   livenessProbe:
