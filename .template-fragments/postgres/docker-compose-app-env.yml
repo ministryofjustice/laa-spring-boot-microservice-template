@@ -1,5 +1,0 @@
-      DB_HOST: postgres
-      DB_NAME: %%SERVICE_KEBAB%%_dev
-      DB_USERNAME: user
-      DB_PASSWORD: dev
-

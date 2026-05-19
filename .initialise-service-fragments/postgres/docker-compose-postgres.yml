@@ -1,5 +1,5 @@
   postgres:
-    image: postgres:16
+    image: postgres:18
     container_name: %%SERVICE_KEBAB%%-postgres
     environment:
       POSTGRES_DB: %%SERVICE_KEBAB%%_dev
