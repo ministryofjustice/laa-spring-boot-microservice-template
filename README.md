@@ -110,8 +110,7 @@ The script performs the following operations **in order**:
 
 7. **PostgreSQL configuration** *(only if selected at prompt 8)* — replaces H2 with PostgreSQL +
    Flyway in `build.gradle` and `application.yml`, adds a `postgres` service to `docker-compose.yml`,
-   writes Flyway migrations, adds `TestcontainersConfig.java` for integration tests, and generates
-   a Helm chart skeleton under `.helm/{service-name}/`.
+   writes Flyway migrations, and adds `TestcontainersConfig.java` for integration tests.
 
 ### Files and Directories That Are Never Modified
 
@@ -140,10 +139,9 @@ The script prints a checklist of remaining manual steps:
 6. Set your team as code owner in `.github/CODEOWNERS`.
 7. Delete the example `Item*` classes, `schema.sql` / `data.sql` (H2) or Flyway migrations (PostgreSQL) if not needed.
 
-If you chose PostgreSQL, two additional steps apply:
+If you chose PostgreSQL, one additional step applies:
 
-8. Run `helm dependency update .helm/{service-name}/` and configure `image.registry` / `image.repository` in each Helm values file before deploying to Cloud Platform.
-9. Docker must be running locally for integration tests (Testcontainers starts a real PostgreSQL container).
+8. Docker must be running locally for integration tests (Testcontainers starts a real PostgreSQL container).
 
 ---
 

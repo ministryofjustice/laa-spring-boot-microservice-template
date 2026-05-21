@@ -1,17 +1,15 @@
 """
 PostgreSQL configuration step — patches build.gradle, application.yml,
-docker-compose.yml, writes Flyway migrations, TestcontainersConfig.java,
-and the Helm chart skeleton.
+docker-compose.yml, writes Flyway migrations, and TestcontainersConfig.java.
 """
 import os
 import re
-import shutil
 from pathlib import Path
 
 from .constants import (
-    _FRAGMENTS_DIR, _T_KEBAB, _T_TESTCONTAINERS_BOM_VERSION,
+    _FRAGMENTS_DIR, _T_TESTCONTAINERS_BOM_VERSION,
 )
-from .helpers import resolve_service_dir, strip_laa, section
+from .helpers import resolve_service_dir, section
 
 
 def step_configure_postgres(
@@ -231,19 +229,10 @@ def step_configure_postgres(
                 it_file.write_text(updated, encoding="utf-8")
             print(f"    Updated      : {it_file.relative_to(root)}")
 
-    # ── 7. Helm chart ──────────────────────────────────────────────────────────
-    helm_root = root / ".helm" / service_name
-    src_helm  = pg_dir / "helm"
-    for src_file in src_helm.rglob("*"):
-        if src_file.is_file():
-            write(helm_root / src_file.relative_to(src_helm), fill(src_file.read_text(encoding="utf-8")))
-
-    # ── 8. README postgres references ────────────────────────────────────────
+    # ── 7. README postgres references ─────────────────────────────────────────
     _update_readme_for_postgres(root, dry_run)
 
     print("\n    PostgreSQL configuration complete.")
-    print(f"    Helm chart skeleton written to .helm/{service_name}/")
-    print(f"    Run 'helm dependency update .helm/{service_name}' before deploying.")
 
 
 def _update_readme_for_postgres(root: Path, dry_run: bool) -> None:
