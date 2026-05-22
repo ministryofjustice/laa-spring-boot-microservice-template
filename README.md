@@ -33,7 +33,11 @@ Includes the following subprojects:
 
 This repository ships with `initialise-service.py` — a Python 3 script that renames every
 placeholder value across all source files, renames subproject directories, restructures package
-names, and cleans up the README in one guided run.
+names, and cleans up the README in one guided run. Optionally it can also switch the database
+from H2 to PostgreSQL (RDS-ready).
+
+The script is a thin launcher; its implementation lives in `.initialise-service-tools/template_tools/`.
+Fragment files used by the PostgreSQL option are in `.initialise-service-fragments/`.
 
 ### Prerequisites
 
@@ -68,7 +72,8 @@ python3 initialise-service.py laa-my-new-service \
 | 4 | **Application version** | Defaults to `1.0.0` (kept as-is in `gradle.properties`). | `1.0.0` |
 | 5 | **Server port** | Defaults to `8081`. Updates `application.yml`, `Dockerfile`, `docker-compose.yml`, and README example URLs. | `8080` |
 | 6 | **Management (actuator) port** | Defaults to `8181`. | `9090` |
-| 7 | **Delete this script when done?** | Defaults to `no`. If `yes`, the script removes itself after a successful run. | `y` / `n` |
+| 7 | **Delete script and fragments when done?** | Defaults to `no`. If `yes`, removes `initialise-service.py`, `.initialise-service-tools/`, and `.initialise-service-fragments/` after a successful run. | `y` / `n` |
+| 8 | **Use PostgreSQL instead of H2?** | Defaults to `no`. If `yes`, applies the PostgreSQL configuration step — see below. | `y` / `n` |
 
 Before any changes are applied, the script displays a **confirmation summary** showing every value
 it is about to use. You must explicitly confirm before it writes anything.
@@ -103,6 +108,10 @@ The script performs the following operations **in order**:
 6. **README cleanup** — removes the ⚠️ WORK IN PROGRESS banner and replaces the
    *Setup Instructions* section with a TODO placeholder for you to fill in.
 
+7. **PostgreSQL configuration** *(only if selected at prompt 8)* — replaces H2 with PostgreSQL +
+   Flyway in `build.gradle` and `application.yml`, adds a `postgres` service to `docker-compose.yml`,
+   writes Flyway migrations, and adds `TestcontainersConfig.java` for integration tests.
+
 ### Files and Directories That Are Never Modified
 
 The following are intentionally skipped:
@@ -110,6 +119,7 @@ The following are intentionally skipped:
 | Skipped | Reason |
 |---------|--------|
 | `.git/`, `.gradle/`, `build/`, `bin/`, `generated/` | Generated / VCS internals |
+| `.initialise-service-tools/`, `.initialise-service-fragments/` | Script implementation and fragment files — not part of your service |
 | `gradlew`, `gradlew.bat`, `gradle-wrapper.jar` | Gradle wrapper — must not be altered |
 | `initialise-service.py` | The script itself |
 | `*.class`, `*.jar`, `*.exe`, binary assets | Binary files that cannot be text-replaced |
@@ -127,7 +137,11 @@ The script prints a checklist of remaining manual steps:
 4. Set `sentry.dsn` and `sentry.environment` in `application.yml`.
 5. Uncomment and configure the `registries` section in `.github/dependabot.yml`.
 6. Set your team as code owner in `.github/CODEOWNERS`.
-7. Delete the example `Item*` classes, `schema.sql`, and `data.sql` if not needed.
+7. Delete the example `Item*` classes, `schema.sql` / `data.sql` (H2) or Flyway migrations (PostgreSQL) if not needed.
+
+If you chose PostgreSQL, one additional step applies:
+
+8. Docker must be running locally for integration tests (Testcontainers starts a real PostgreSQL container).
 
 ---
 
@@ -343,7 +357,7 @@ sentry:
   methods like getters, setters, constructors etc. at compile-time using annotations.
 - [MapStruct](https://mapstruct.org/) - used for object mapping, specifically for converting between different Java object types, such as Data Transfer Objects (DTOs)
   and Entity objects. It generates mapping code at compile code.
-- [H2](https://www.h2database.com/html/main.html) - used to provide an example database and should not be used in production.
+- [H2](https://www.h2database.com/html/main.html) - used to provide an in-memory example database for local development and testing. Replaced by PostgreSQL + Flyway when the PostgreSQL option is selected during initialisation.
 - [Sentry for Java SDK](https://docs.sentry.io/platforms/java/) - used to capture application exception events at runtime, which can be monitored via the Sentry UI.
 
 ## ⚠️ Temporary Dependency Overrides

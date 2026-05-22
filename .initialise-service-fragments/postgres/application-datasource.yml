@@ -1,0 +1,19 @@
+  # PostgreSQL datasource — connection details injected from environment (RDS in deployed envs,
+  # local postgres container in docker-compose). All four vars have localhost defaults so the
+  # service also starts when running directly via IntelliJ / bootRun without Docker.
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:%%SERVICE_KEBAB%%_dev}
+    username: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:dev}
+
+  flyway:
+    enabled: true
+    schemas: public
+    out-of-order: true
+
+  #do not auto create db schema, use Flyway migrations
+  jpa:
+    hibernate:
+      ddl-auto: none
+
