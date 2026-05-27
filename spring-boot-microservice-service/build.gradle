@@ -1,10 +1,10 @@
 plugins {
-    id 'io.freefair.lombok' version '9.4.0'
+    id 'io.freefair.lombok' version '9.5.0'
     id 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin' version '2.2.6'
-    id 'io.sentry.jvm.gradle' version '6.5.0'
-    id "com.dorongold.task-tree" version "2.1.1"
-    id "com.diffplug.spotless" version "7.2.1"
-    id 'au.com.dius.pact' version '4.6.19'
+    id 'io.sentry.jvm.gradle' version '6.7.1'
+    id "com.dorongold.task-tree" version "4.0.1"
+    id "com.diffplug.spotless" version "8.5.1"
+    id 'au.com.dius.pact' version '4.7.1'
     id 'jacoco'
     id 'checkstyle'
 }
@@ -65,11 +65,11 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     // temporary dependency overrides see README
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.3'
     // tomcat version is controlled via ext['tomcat.version'] = '11.0.22' above - do NOT pin an explicit version here
     // as it would override Spring Boot's dependency management and ignore the ext property
     implementation 'org.apache.tomcat.embed:tomcat-embed-core'
-    implementation 'tools.jackson.core:jackson-core:3.1.2'
+    implementation 'tools.jackson.core:jackson-core:3.1.3'
 
     runtimeOnly 'com.h2database:h2'
 
