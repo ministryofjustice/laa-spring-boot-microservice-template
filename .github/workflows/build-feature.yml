@@ -24,6 +24,7 @@ jobs:
       java_distribution: *JDK_DISTRIBUTION
       integration_test_task: "integrationTest"
       release_type: 'snapshot'
+      semgrep_check: 'true'
       jacoco_coverage_report: 'true'
       jacoco_coverage_report_path: 'spring-boot-microservice-service/build/reports/jacoco'
       junit_results_path: 'spring-boot-microservice-service/build/test-results'
