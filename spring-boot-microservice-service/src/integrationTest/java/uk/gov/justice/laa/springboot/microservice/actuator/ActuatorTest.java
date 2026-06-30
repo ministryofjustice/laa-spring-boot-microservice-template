@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestPropertySource(properties = {
     "management.endpoints.web.exposure.include=health",
     "management.server.port=0",
+    "spring.sql.init.mode=never",
 })
 class ActuatorTest {
 
