@@ -1,5 +1,5 @@
 plugins {
-    id 'org.openapi.generator' version '7.18.0'
+    id 'org.openapi.generator'
     id 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
 }
 
@@ -30,7 +30,7 @@ openApiGenerate {
             serializableModel   : "true",
             skipDefaultInterface: "true",
             useJakartaEe        : "true",
-            useSpringBoot3      : "true",
+            useSpringBoot4      : "true",
             useTags             : "true",
     ]
 }
