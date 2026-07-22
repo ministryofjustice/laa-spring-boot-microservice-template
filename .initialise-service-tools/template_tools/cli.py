@@ -169,9 +169,9 @@ def main(args=None) -> None:
         pg_steps = ""
         if use_postgres:
             pg_steps = (
-                "\n  8.  .helm/                    Run: helm dependency update .helm/" + core_name +
+                "\n  7.  .helm/                    Run: helm dependency update .helm/" + core_name +
                 "\n                                Set image.registry + image.repository in each values file"
-                "\n  9.  TestcontainersConfig      Docker must be running for integration tests to pass"
+                "\n  8.  TestcontainersConfig      Docker must be running for integration tests to pass"
             )
         print(f"""
   Remaining manual steps
@@ -180,9 +180,8 @@ def main(args=None) -> None:
   2.  README.md                 Rewrite the TODO section for your service
   3.  open-api-specification.yml  Replace with your own API design
   4.  application.yml           Set sentry.dsn and sentry.environment
-  5.  dependabot.yml            Uncomment and configure the registries section
-  6.  .github/CODEOWNERS        Set your team as code owner
-  7.  Remove example domain     Delete Item* classes, schema.sql, data.sql
+  5.  .github/CODEOWNERS        Set your team as code owner
+  6.  Remove example domain     Delete Item* classes, schema.sql, data.sql
                                 if you don't need them{pg_steps}
   ──────────────────────────────────────────────────────────""")
 

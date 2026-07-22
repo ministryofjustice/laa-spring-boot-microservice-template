@@ -20,8 +20,8 @@ sensible defaults for the following plugins:
 - [Test Logger](https://github.com/radarsh/gradle-test-logger-plugin)
 - [Versions](https://github.com/ben-manes/gradle-versions-plugin)
 
-The plugin is provided by -  [laa-spring-boot-common](https://github.com/ministryofjustice/laa-spring-boot-common), where you can find
-more information regarding setup and usage.
+The plugin is provided by [laa-spring-boot-common](https://github.com/ministryofjustice/laa-spring-boot-common)
+and is publicly available from Maven Central. The common repository contains more information about its usage.
 
 ### Project Structure
 Includes the following subprojects:
@@ -135,12 +135,12 @@ The script prints a checklist of remaining manual steps:
 2. Rewrite the TODO section in `README.md` to describe your service.
 3. Replace `open-api-specification.yml` with your own API design.
 4. Set `sentry.dsn` and `sentry.environment` in `application.yml`.
-5. Uncomment and configure the `registries` section in `.github/dependabot.yml`.
-6. Set your team as code owner in `.github/CODEOWNERS`.
-7. Delete the example `Item*` classes, `schema.sql` / `data.sql` (H2) or Flyway migrations (PostgreSQL) if not needed.
+5. Set your team as code owner in `.github/CODEOWNERS`.
+6. Delete the example `Item*` classes, `schema.sql` / `data.sql` (H2) or Flyway migrations (PostgreSQL) if not needed.
 
-If you chose PostgreSQL, one additional step applies:
+If you chose PostgreSQL, two additional steps apply:
 
+7. Run `helm dependency update .helm/{service-name}` and configure the image registry and repository in each values file.
 8. Docker must be running locally for integration tests (Testcontainers starts a real PostgreSQL container).
 
 ---
@@ -172,9 +172,7 @@ After creating your repository from this template:
   - Change `uk.gov.laa.springboot.microservice.*` package references to `uk.gov.laa.{application-package-name}.*`.
   - Review schedule settings (`day`, `time`, `timezone`, and `cooldown`) and update if needed.
   - Update `labels` to match your repository conventions.
-  - Uncomment the `registries` section and follow the inline instructions if you need updates from `laa-spring-boot-common`.
 - Configure `CODEOWNERS` and enable required code owner review in repository branch protection/rulesets so Dependabot PRs route to the correct team.
-- Add `REPO_TOKEN` as a repository secret if `registries` is enabled.
 - See `Required GitHub repository settings after template creation` for repository-level security toggles.
 
 ### Required GitHub repository settings after template creation
@@ -370,6 +368,4 @@ available in a future `laa-spring-boot-common` release.
 | `com.fasterxml.jackson.core:jackson-core`   | `2.21.2`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551) | 2026-04-30 |
 | `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.21`          | Fixes Snyk issues - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820)      | 2026-04-30 |
 | `tools.jackson.core:jackson-core`           | `3.1.1`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15907550](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15907550)               | 2026-04-30 |
-
-
 
