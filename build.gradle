@@ -1,4 +1,7 @@
+plugins {
+    id 'com.dorongold.task-tree' version '4.0.1'
+}
+
 subprojects {
     group = 'uk.gov.justice.laa.springboot.microservice'
 }
-

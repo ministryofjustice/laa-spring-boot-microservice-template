@@ -1,19 +1,23 @@
 plugins {
-    id 'io.freefair.lombok' version '9.4.0'
+    id 'io.freefair.lombok' version '9.5.0'
     id 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin' version '2.2.6'
-    id 'io.sentry.jvm.gradle' version '6.5.0'
-    id "com.dorongold.task-tree" version "2.1.1"
-    id "com.diffplug.spotless" version "7.2.1"
-    id 'au.com.dius.pact' version '4.6.19'
+    id 'io.sentry.jvm.gradle' version '6.7.1'
+    id "com.diffplug.spotless" version "8.5.1"
+    id 'au.com.dius.pact' version '4.7.1'
     id 'jacoco'
     id 'checkstyle'
 }
 
-// Overrides the Tomcat version bundled with Spring Boot to fix known CVEs:
-// SNYK-JAVA-ORGAPACHETOMCATEMBED-16691231 (Critical - Improper Authentication)
-// SNYK-JAVA-ORGAPACHETOMCATEMBED-16643259 (High - Resource Allocation without Limits)
-// Remove once the Spring Boot parent BOM ships with >= 11.0.22.
-ext['tomcat.version'] = '11.0.22'
+// Temporary security overrides for versions managed by the Spring Boot BOM.
+// Keep the corresponding table in the README in sync and remove these once
+// laa-spring-boot-common supplies a Spring Boot BOM containing these versions.
+ext['jackson-2-bom.version'] = '2.21.5'
+ext['jackson-bom.version'] = '3.1.5'
+ext['logback.version'] = '1.5.36'
+ext['micrometer.version'] = '1.16.6'
+ext['spring-data-bom.version'] = '2025.1.6'
+ext['spring-framework.version'] = '7.0.8'
+ext['tomcat.version'] = '11.0.23'
 
 // Replaces application.yml @version@  with version from gradle.properties
 processResources {
@@ -63,13 +67,6 @@ dependencies {
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
-
-    // temporary dependency overrides see README
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.2'
-    // tomcat version is controlled via ext['tomcat.version'] = '11.0.22' above - do NOT pin an explicit version here
-    // as it would override Spring Boot's dependency management and ignore the ext property
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core'
-    implementation 'tools.jackson.core:jackson-core:3.1.2'
 
     runtimeOnly 'com.h2database:h2'
 
