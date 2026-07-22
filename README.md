@@ -360,12 +360,20 @@ sentry:
 
 ## ⚠️ Temporary Dependency Overrides
 
-The following Gradle dependency overrides are **temporary** and should be removed once the dependency versions are
-available in a future `laa-spring-boot-common` release.
+The following declarations intentionally override dependency versions managed by the
+`laa-spring-boot-gradle-plugin` from `laa-spring-boot-common` (and its imported Spring Boot dependency management).
+They are **temporary** and should be removed when `laa-spring-boot-common` supplies the required versions.
+Add any future dependency override to this table in the same change that introduces it to the Gradle build.
 
-| Dependency                                  | Overridden Version | Reason                                                                                                                                    | Date Added |
-|---------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| `com.fasterxml.jackson.core:jackson-core`   | `2.21.2`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551) | 2026-04-30 |
-| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.21`          | Fixes Snyk issues - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820)      | 2026-04-30 |
-| `tools.jackson.core:jackson-core`           | `3.1.1`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15907550](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15907550)               | 2026-04-30 |
+| Spring Boot BOM property     | Version managed by `laa-spring-boot-common` | Override used by this service | Affected dependency family | Date Added |
+|------------------------------|---------------------------------------------|-------------------------------|----------------------------|------------|
+| `jackson-2-bom.version`      | `2.21.2`                                    | `2.21.5`                      | Jackson 2                  | 2026-07-22 |
+| `jackson-bom.version`        | `3.1.2`                                     | `3.1.5`                       | Jackson 3                  | 2026-07-22 |
+| `logback.version`            | `1.5.32`                                    | `1.5.36`                      | Logback                    | 2026-07-22 |
+| `micrometer.version`         | `1.16.5`                                    | `1.16.6`                      | Micrometer                 | 2026-07-22 |
+| `spring-data-bom.version`    | `2025.1.5`                                  | `2025.1.6`                    | Spring Data 4.0.6          | 2026-07-22 |
+| `spring-framework.version`   | `7.0.7`                                     | `7.0.8`                       | Spring Framework           | 2026-07-22 |
+| `tomcat.version`             | `11.0.21`                                   | `11.0.23`                     | Embedded Tomcat            | 2026-07-22 |
 
+Other dependencies with explicit versions in the Gradle build are direct dependency declarations, not overrides of
+versions managed by `laa-spring-boot-common`.
