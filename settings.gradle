@@ -6,7 +6,7 @@ pluginManagement {
     }
 
     plugins {
-        id 'uk.gov.justice.service.laa.laa-spring-boot-gradle-plugin' version '3.0.0'
+        id 'uk.gov.justice.service.laa.laa-spring-boot-gradle-plugin' version '3.0.1'
         id 'org.openapi.generator' version '7.22.0'
         id 'io.freefair.lombok' version '9.5.0'
     }
