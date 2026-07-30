@@ -20,8 +20,8 @@ sensible defaults for the following plugins:
 - [Test Logger](https://github.com/radarsh/gradle-test-logger-plugin)
 - [Versions](https://github.com/ben-manes/gradle-versions-plugin)
 
-The plugin is provided by -  [laa-spring-boot-common](https://github.com/ministryofjustice/laa-spring-boot-common), where you can find
-more information regarding setup and usage.
+The plugin is provided by [laa-spring-boot-common](https://github.com/ministryofjustice/laa-spring-boot-common)
+and is publicly available from Maven Central. The common repository contains more information about its usage.
 
 ### Project Structure
 Includes the following subprojects:
@@ -135,12 +135,12 @@ The script prints a checklist of remaining manual steps:
 2. Rewrite the TODO section in `README.md` to describe your service.
 3. Replace `open-api-specification.yml` with your own API design.
 4. Set `sentry.dsn` and `sentry.environment` in `application.yml`.
-5. Uncomment and configure the `registries` section in `.github/dependabot.yml`.
-6. Set your team as code owner in `.github/CODEOWNERS`.
-7. Delete the example `Item*` classes, `schema.sql` / `data.sql` (H2) or Flyway migrations (PostgreSQL) if not needed.
+5. Set your team as code owner in `.github/CODEOWNERS`.
+6. Delete the example `Item*` classes, `schema.sql` / `data.sql` (H2) or Flyway migrations (PostgreSQL) if not needed.
 
-If you chose PostgreSQL, one additional step applies:
+If you chose PostgreSQL, two additional steps apply:
 
+7. Run `helm dependency update .helm/{service-name}` and configure the image registry and repository in each values file.
 8. Docker must be running locally for integration tests (Testcontainers starts a real PostgreSQL container).
 
 ---
@@ -172,9 +172,7 @@ After creating your repository from this template:
   - Change `uk.gov.laa.springboot.microservice.*` package references to `uk.gov.laa.{application-package-name}.*`.
   - Review schedule settings (`day`, `time`, `timezone`, and `cooldown`) and update if needed.
   - Update `labels` to match your repository conventions.
-  - Uncomment the `registries` section and follow the inline instructions if you need updates from `laa-spring-boot-common`.
 - Configure `CODEOWNERS` and enable required code owner review in repository branch protection/rulesets so Dependabot PRs route to the correct team.
-- Add `REPO_TOKEN` as a repository secret if `registries` is enabled.
 - See `Required GitHub repository settings after template creation` for repository-level security toggles.
 
 ### Required GitHub repository settings after template creation
@@ -362,14 +360,20 @@ sentry:
 
 ## ⚠️ Temporary Dependency Overrides
 
-The following Gradle dependency overrides are **temporary** and should be removed once the dependency versions are
-available in a future `laa-spring-boot-common` release.
+The following declarations intentionally override dependency versions managed by the
+`laa-spring-boot-gradle-plugin` from `laa-spring-boot-common` (and its imported Spring Boot dependency management).
+They are **temporary** and should be removed when `laa-spring-boot-common` supplies the required versions.
+Add any future dependency override to this table in the same change that introduces it to the Gradle build.
 
-| Dependency                                  | Overridden Version | Reason                                                                                                                                    | Date Added |
-|---------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| `com.fasterxml.jackson.core:jackson-core`   | `2.21.2`           | Fixes Snyk issue - [SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551](https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-15907551) | 2026-04-30 |
-| `org.apache.tomcat.embed:tomcat-embed-core` | `11.0.21`          | Fixes Snyk issues - [SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820](https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHETOMCATEMBED-15989820)      | 2026-04-30 |
-| `tools.jackson.core:jackson-core`           | `3.1.1`            | Fixes Snyk issue - [SNYK-JAVA-TOOLSJACKSONCORE-15907550](https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15907550)               | 2026-04-30 |
+| Spring Boot BOM property     | Version managed by `laa-spring-boot-common` | Override used by this service | Affected dependency family | Date Added |
+|------------------------------|---------------------------------------------|-------------------------------|----------------------------|------------|
+| `jackson-2-bom.version`      | `2.21.2`                                    | `2.21.5`                      | Jackson 2                  | 2026-07-22 |
+| `jackson-bom.version`        | `3.1.2`                                     | `3.1.5`                       | Jackson 3                  | 2026-07-22 |
+| `logback.version`            | `1.5.32`                                    | `1.5.36`                      | Logback                    | 2026-07-22 |
+| `micrometer.version`         | `1.16.5`                                    | `1.16.6`                      | Micrometer                 | 2026-07-22 |
+| `spring-data-bom.version`    | `2025.1.5`                                  | `2025.1.6`                    | Spring Data 4.0.6          | 2026-07-22 |
+| `spring-framework.version`   | `7.0.7`                                     | `7.0.8`                       | Spring Framework           | 2026-07-22 |
+| `tomcat.version`             | `11.0.21`                                   | `11.0.23`                     | Embedded Tomcat            | 2026-07-22 |
 
-
-
+Other dependencies with explicit versions in the Gradle build are direct dependency declarations, not overrides of
+versions managed by `laa-spring-boot-common`.

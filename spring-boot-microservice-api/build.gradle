@@ -1,6 +1,6 @@
 plugins {
     id 'org.openapi.generator'
-    id 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
+    id 'uk.gov.justice.service.laa.laa-spring-boot-gradle-plugin'
 }
 
 repositories {
