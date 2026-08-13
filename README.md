@@ -4,6 +4,9 @@
 ### ⚠️ WORK IN PROGRESS ⚠️
 This template is still under development and features may be added or subject to change.
 
+## Useful links
+- [LAA Java Community Technical Guidance](https://ministryofjustice.github.io/laa-java-community-technical-guidance/)
+
 ## Overview
 
 Template GitHub repository used for Spring Boot Java microservice projects.
