@@ -8,17 +8,6 @@ plugins {
     id 'checkstyle'
 }
 
-// Temporary security overrides for versions managed by the Spring Boot BOM.
-// Keep the corresponding table in the README in sync and remove these once
-// laa-spring-boot-common supplies a Spring Boot BOM containing these versions.
-ext['jackson-2-bom.version'] = '2.21.5'
-ext['jackson-bom.version'] = '3.1.5'
-ext['logback.version'] = '1.5.36'
-ext['micrometer.version'] = '1.16.6'
-ext['spring-data-bom.version'] = '2025.1.6'
-ext['spring-framework.version'] = '7.0.8'
-ext['tomcat.version'] = '11.0.23'
-
 // Replaces application.yml @version@  with version from gradle.properties
 processResources {
     filesMatching('application.yml') {
@@ -53,7 +42,10 @@ dependencies {
     implementation project(':spring-boot-microservice-api')
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa') {
+        // JAXB has an unpatched XXE; this service uses annotations, not XML mappings.
+        exclude group: 'org.glassfish.jaxb', module: 'jaxb-runtime'
+    }
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 
