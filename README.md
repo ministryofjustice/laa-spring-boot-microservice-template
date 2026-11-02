@@ -366,17 +366,28 @@ sentry:
 The following declarations intentionally override dependency versions managed by the
 `laa-spring-boot-gradle-plugin` from `laa-spring-boot-common` (and its imported Spring Boot dependency management).
 They are **temporary** and should be removed when `laa-spring-boot-common` supplies the required versions.
+The root `build.gradle` applies these overrides to both modules. The baseline below is Spring Boot `4.1.2`,
+supplied by `laa-spring-boot-gradle-plugin` `3.1.4`.
 Add any future dependency override to this table in the same change that introduces it to the Gradle build.
 
 | Spring Boot BOM property     | Version managed by `laa-spring-boot-common` | Override used by this service | Affected dependency family | Date Added |
 |------------------------------|---------------------------------------------|-------------------------------|----------------------------|------------|
-| `jackson-2-bom.version`      | `2.21.2`                                    | `2.21.5`                      | Jackson 2                  | 2026-07-22 |
-| `jackson-bom.version`        | `3.1.2`                                     | `3.1.5`                       | Jackson 3                  | 2026-07-22 |
-| `logback.version`            | `1.5.32`                                    | `1.5.36`                      | Logback                    | 2026-07-22 |
-| `micrometer.version`         | `1.16.5`                                    | `1.16.6`                      | Micrometer                 | 2026-07-22 |
-| `spring-data-bom.version`    | `2025.1.5`                                  | `2025.1.6`                    | Spring Data 4.0.6          | 2026-07-22 |
-| `spring-framework.version`   | `7.0.7`                                     | `7.0.8`                       | Spring Framework           | 2026-07-22 |
-| `tomcat.version`             | `11.0.21`                                   | `11.0.23`                     | Embedded Tomcat            | 2026-07-22 |
+| `jackson-2-bom.version`      | `2.21.7`                                    | `2.21.8`                      | Jackson 2                  | 2026-07-22 |
+| `jackson-bom.version`        | `3.1.7`                                     | `3.1.8`                       | Jackson 3                  | 2026-07-22 |
+
+The previous Logback, Micrometer, Spring Data, Spring Framework and Tomcat overrides were removed because the
+updated BOM supplies newer versions (`1.5.38`, `1.17.2`, `2026.0.2`, `7.0.10` and `11.0.27`, respectively).
+Retain this table as a placeholder when the remaining overrides can be removed.
+
+### JAXB runtime exclusion
+
+The JPA starter excludes Hibernate's transitive `org.glassfish.jaxb:jaxb-runtime`, removing the unpatched
+`jaxb-core` XXE reported in
+[SNYK-JAVA-ORGGLASSFISHJAXB-20883142](https://security.snyk.io/vuln/SNYK-JAVA-ORGGLASSFISHJAXB-20883142).
+Hibernate XML mapping processing is disabled with `spring.jpa.properties.hibernate.xml_mapping_enabled=false`.
+The example entities use annotations; Hibernate XML mappings and JAXB-based XML persistence are not supported
+while this exclusion is present. If a service needs those capabilities, restore the runtime only after a patched
+JAXB release is available and reassess the XML configuration.
 
 Other dependencies with explicit versions in the Gradle build are direct dependency declarations, not overrides of
 versions managed by `laa-spring-boot-common`.

@@ -1,7 +1,12 @@
 plugins {
-    id 'com.dorongold.task-tree' version '4.0.1'
+    id 'com.dorongold.task-tree' version '4.0.2'
 }
 
 subprojects {
     group = 'uk.gov.justice.laa.springboot.microservice'
+
+    // Remove when the shared plugin's Spring Boot BOM supplies these security fixes.
+    // Keep both modules aligned and the README override table in sync.
+    ext['jackson-2-bom.version'] = '2.21.8'
+    ext['jackson-bom.version'] = '3.1.8'
 }
