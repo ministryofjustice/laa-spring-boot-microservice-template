@@ -1,23 +1,12 @@
 plugins {
-    id 'io.freefair.lombok' version '9.5.0'
+    id 'io.freefair.lombok' version '9.7.0'
     id 'uk.gov.justice.service.laa.laa-spring-boot-gradle-plugin'
-    id 'io.sentry.jvm.gradle' version '6.7.1'
-    id "com.diffplug.spotless" version "8.5.1"
-    id 'au.com.dius.pact' version '4.7.1'
+    id 'io.sentry.jvm.gradle' version '6.23.0'
+    id "com.diffplug.spotless" version "8.10.3"
+    id 'au.com.dius.pact' version '4.7.5'
     id 'jacoco'
     id 'checkstyle'
 }
-
-// Temporary security overrides for versions managed by the Spring Boot BOM.
-// Keep the corresponding table in the README in sync and remove these once
-// laa-spring-boot-common supplies a Spring Boot BOM containing these versions.
-ext['jackson-2-bom.version'] = '2.21.5'
-ext['jackson-bom.version'] = '3.1.5'
-ext['logback.version'] = '1.5.36'
-ext['micrometer.version'] = '1.16.6'
-ext['spring-data-bom.version'] = '2025.1.6'
-ext['spring-framework.version'] = '7.0.8'
-ext['tomcat.version'] = '11.0.23'
 
 // Replaces application.yml @version@  with version from gradle.properties
 processResources {
@@ -53,17 +42,20 @@ dependencies {
     implementation project(':spring-boot-microservice-api')
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa') {
+        // JAXB has an unpatched XXE; this service uses annotations, not XML mappings.
+        exclude group: 'org.glassfish.jaxb', module: 'jaxb-runtime'
+    }
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1'
 
     // Required for tracing information
     implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
-    implementation 'org.apache.commons:commons-lang3:3.20.0'
+    implementation 'org.apache.commons:commons-lang3:3.21.0'
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
