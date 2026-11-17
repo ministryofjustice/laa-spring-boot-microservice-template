@@ -1,5 +1,5 @@
 # Specify java runtime base image
-FROM ghcr.io/ministryofjustice/laa-amazoncorretto:25-jre-alpine
+FROM ghcr.io/ministryofjustice/laa-base-container-images/java:25-corretto-alpine
 
 USER root
 
